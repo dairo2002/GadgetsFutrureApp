@@ -63,6 +63,7 @@
         android:textSize="18sp" />
 
     <EditText
+        android:id="@+id/txtRecuperarPassword"
         android:layout_width="300dp"
         android:layout_height="45dp"
         android:layout_gravity="center"
@@ -71,6 +72,7 @@
         android:hint="Correo electrónico..." />
 
     <Button
+        android:id="@+id/btnRecuperarPwd"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
