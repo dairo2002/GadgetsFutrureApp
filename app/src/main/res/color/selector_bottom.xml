@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Estado cuando el elemento está seleccionado -->
+    <item
+        android:color="@color/ColorPrincipal"
+        android:state_checked="true"
+
+        />
+
+    <!-- Estado por defecto -->
+    <item android:color="@color/white" />
+
+
+</selector>

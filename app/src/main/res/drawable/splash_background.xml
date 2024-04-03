@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list
+    android:opacity="transparent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item android:drawable="@color/white" />
+    <item
+        android:drawable="@drawable/logogadgetsfuture"
+        android:gravity="center"
+        android:height="150dp"
+        android:width="430dp">
+
+    </item>
+
+</layer-list>
