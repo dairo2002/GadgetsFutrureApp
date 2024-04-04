@@ -5,7 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".detalle_producto">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        >
+
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
@@ -13,5 +19,193 @@
         android:layout_margin="20dp"
         android:background="@null"
         android:src="@drawable/arrow_left" />
+
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="620dp"
+            android:layout_margin="20sp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="8dp"
+                >
+
+                <TextView
+                    android:id="@+id/lblNombreDetalleProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="ROG Strix XG43UQ"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp"/>
+
+                <ImageView
+                    android:id="@+id/imgDetalleProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:src="@drawable/audifonos" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+
+                    <!--
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_star_24" />
+
+                        <ImageView
+                            android:id="@+id/imageView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_star_24" />
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_star_24" />
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_star_24" />
+
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4.0"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_vertical"/>
+
+                    </LinearLayout> -->
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lblPrecioDetalleProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="$30.000"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
+
+                    <!--
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="12dp"
+                        android:text="Cantidad"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextNumber"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:paddingStart="8dp"
+                        android:inputType="number"
+                        android:background="@drawable/border_cantidad"
+                        android:text="1"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="bold"  />
+
+                </LinearLayout>
+                        -->
+
+
+
+                    <Button
+                        android:id="@+id/btnDetalleAggCarrito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#115173"
+                        android:fallbackLineSpacing="true"
+                        android:forceDarkAllowed="false"
+                        android:hapticFeedbackEnabled="false"
+                        android:paddingStart="15dp"
+                        android:text="Agregar al carrito"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+                        android:textColor="@color/white"
+                        android:textColorHighlight="@color/black"
+                        android:textColorLink="@color/black"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        />
+
+                    <!--
+                    android:theme="@style/Base.Theme.VistaProyecto"
+                    -->
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="4dp"
+                        android:text="Descripción"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/lblDetalleDescripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ROG Swift OLED PG34WCDM gaming monitor ― 34-inch (33.9 inch viewable,3440 x 1440) 800R curved OLED panel, 240 Hz, 0.03 ms (GTG) response time, G-SYNC®
+                              compatible, custom heatsink, uniform brightness."
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        />
+                    <!--android:background="@android:color/transparent"-->
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
 
 </FrameLayout>

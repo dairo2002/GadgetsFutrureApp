@@ -14,6 +14,8 @@ import com.example.gadgetsfuture.R
 import com.example.gadgetsfuture.config.config
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.NumberFormat
+import java.util.Locale
 
 class adapterHome (var context: Context?, var  listaProductoH:JSONArray)
     :RecyclerView.Adapter<adapterHome.MyHolder>() {
@@ -60,8 +62,12 @@ class adapterHome (var context: Context?, var  listaProductoH:JSONArray)
         //val precioDescunto=producto.getDouble()
         //val porcentajeDescuento=producto.getDouble()
 
+        val formato = NumberFormat.getCurrencyInstance(Locale("es", "CO"))
+        formato.maximumFractionDigits = 0
+        val formatoMoneda = formato.format(precio)
+
         holder.lblnombre.text = nombre
-        holder.lblprecio.text = "$precio"
+        holder.lblprecio.text = "$formatoMoneda"
         Glide.with(holder.itemView.context).load(imgProductoUrl).into(holder.imgProducto)
 
         // cardProductoH nos lleva a detalle del producto

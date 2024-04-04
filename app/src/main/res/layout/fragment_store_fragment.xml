@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".SplashActivity">
 
-
-    <LinearLayout
-        android:id="@+id/contenedor_store"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
-
-
-        <RelativeLayout
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:background="@color/ColorPrincipal">
@@ -47,215 +38,41 @@
 
         </RelativeLayout>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:orientation="vertical"
-                android:background="@drawable/gradiente">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Categorías"
-                        android:textColor="@color/white"
-                        android:layout_gravity="center"
-                        android:textSize="30sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="1dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-
-                        <Button
-                            android:id="@+id/btnPortatiles"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            android:layout_gravity="center"
-                            android:backgroundTint="@color/white"
-                            android:textColor="@color/black"
-                            android:text="Portatiles"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:layout_margin="5dp"
-                            app:cornerRadius="20sp"
-                            app:icon="@drawable/laptop"
-                            app:iconSize="15sp"
-                            app:iconTint="#000000"
-                            app:strokeColor="#000000"
-                            app:strokeWidth="1sp" />
-
-                        <Button
-                            android:id="@+id/btnMouses"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            android:layout_gravity="center"
-                            android:backgroundTint="@color/white"
-                            android:textColor="@color/black"
-                            android:text="Mouses"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:layout_margin="5dp"
-                            app:cornerRadius="20sp"
-                            app:icon="@drawable/mouse"
-                            app:iconSize="15sp"
-                            app:iconTint="#000000"
-                            app:strokeColor="#000000"
-                            app:strokeWidth="1sp"/>
-
-                        <Button
-                            android:id="@+id/btnTeclados"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            android:layout_gravity="center"
-                            android:backgroundTint="@color/white"
-                            android:textColor="@color/black"
-                            android:text="Teclados"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:layout_margin="5dp"
-                            app:cornerRadius="20sp"
-                            app:icon="@drawable/keyboard"
-                            app:iconSize="15sp"
-                            app:iconTint="#000000"
-                            app:strokeColor="#000000"
-                            app:strokeWidth="1sp"/>
-
-                        <Button
-                            android:id="@+id/btnMonitores"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            android:layout_gravity="center"
-                            android:backgroundTint="@color/white"
-                            android:textColor="@color/black"
-                            android:text="Monitores"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:layout_margin="5dp"
-                            app:cornerRadius="20sp"
-                            app:icon="@drawable/monitor"
-                            app:iconSize="15sp"
-                            app:iconTint="#000000"
-                            app:strokeColor="#000000"
-                            app:strokeWidth="1sp"/>
-
-                        <Button
-                            android:id="@+id/btnComputadores"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            android:layout_gravity="center"
-                            android:backgroundTint="@color/white"
-                            android:textColor="@color/black"
-                            android:text="Computadores"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:layout_margin="5dp"
-                            app:cornerRadius="20sp"
-                            app:icon="@drawable/computer"
-                            app:iconSize="15sp"
-                            app:iconTint="#000000"
-                            app:strokeColor="#000000"
-                            app:strokeWidth="1sp"/>
-
-                        <Button
-                            android:id="@+id/btnConsolas"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            android:layout_gravity="center"
-                            android:backgroundTint="@color/white"
-                            android:textColor="@color/black"
-                            android:text="Consolas"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:layout_margin="5dp"
-                            app:cornerRadius="20sp"
-                            app:icon="@drawable/consola"
-                            app:iconSize="15sp"
-                            app:iconTint="#000000"
-                            app:strokeColor="#000000"
-                            app:strokeWidth="1sp" />
-
-                        <Button
-                            android:id="@+id/btnSillas"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            android:layout_gravity="center"
-                            android:backgroundTint="@color/white"
-                            android:textColor="@color/black"
-                            android:text="Sillas"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:layout_margin="5dp"
-                            app:cornerRadius="20sp"
-                            app:icon="@drawable/chair"
-                            app:iconSize="20sp"
-                            app:iconTint="#000000"
-                            app:strokeColor="#000000"
-                            app:strokeWidth="1sp" />
-
-                    </LinearLayout>
-
-                </HorizontalScrollView>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            android:background="@drawable/gradiente">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:gravity="center">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Desliza para ver mas categorías"
-                    android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
-
-                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="10dp"
-                    android:src="@drawable/arrow_right_black" />
+                    android:text="Categorías"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
-            </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RVCategorias"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/RVCategorias"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
-
-        </ScrollView>
 
     </LinearLayout>
 
-</RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RVStoreProductos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

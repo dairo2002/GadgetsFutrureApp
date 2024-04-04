@@ -10,17 +10,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.example.gadgetsfuture.adapter.adapterCategoria
 import com.example.gadgetsfuture.adapter.adapterHome
 import com.example.gadgetsfuture.config.config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,26 +37,23 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class store_fragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
-    lateinit var recycler: RecyclerView
+    lateinit var recyclerProducto: RecyclerView
+    lateinit var recyclerCategoria: RecyclerView
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+        inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+
         val view = inflater.inflate(R.layout.fragment_store_fragment, container, false)
+
+        /*
         val buttonIds = listOf(
             R.id.btnPortatiles,
             R.id.btnMouses,
@@ -61,9 +62,9 @@ class store_fragment : Fragment() {
             R.id.btnComputadores,
             R.id.btnConsolas,
             R.id.btnSillas
-        )
+        )*/
 
-        for (buttonId in buttonIds) {
+        /*for (buttonId in buttonIds) {
             val btnCategoria: Button = view.findViewById(buttonId)
 
             btnCategoria.setOnClickListener {
@@ -81,12 +82,16 @@ class store_fragment : Fragment() {
                     cambiarColorIcono(btnCategoria, R.color.black)
                 }
             }
-        }
+        }*/
 
-        //Error
-        recycler= view.findViewById(R.id.RVCategorias)
 
-        llamarPeticionCategorias()
+        recyclerProducto= view.findViewById(R.id.RVStoreProductos)
+        llamarPeticionProductos()
+
+        recyclerCategoria= view.findViewById(R.id.RVCategorias)
+        llamarPeticionCategoria()
+
+        llamarPeticionCategoriaDeProd()
 
         return view
     }
@@ -116,10 +121,10 @@ class store_fragment : Fragment() {
             }
     }
 
-    fun llamarPeticionCategorias(){
+    fun llamarPeticionProductos(){
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                peticionListaProductosC()
+                listaProductos()
             }catch (error: Exception){
                 Toast.makeText(activity, "Error en el servidor, por favor conectate a internet", Toast.LENGTH_LONG).show()
             }
@@ -127,7 +132,59 @@ class store_fragment : Fragment() {
     }
 
 
-    suspend fun peticionListaProductosC(){
+    fun llamarPeticionCategoria(){
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                listaCategoria()
+            }catch (error: Exception){
+                Toast.makeText(activity, "Error en el servidor, por favor conectate a internet", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
+    fun llamarPeticionCategoriaDeProd(){
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                listaCategoria()
+            }catch (error: Exception){
+                Toast.makeText(activity, "Error en el servidor, por favor conectate a internet", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    suspend fun categoriaDeProductos(){
+
+    }
+
+
+    suspend fun listaCategoria(){
+        var url= config.urlTienda+"v1/lista_categorias"
+        var queue= Volley.newRequestQueue(activity)
+        var request= JsonArrayRequest(
+            Request.Method.GET,
+            url,
+            null,
+            {response->
+                try {
+                    //recycler.layoutManager = GridLayoutManager(activity,  3)
+                    recyclerCategoria.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                    val adapter = adapterCategoria(activity, listaCategoria = response)
+                    recyclerCategoria.adapter = adapter
+
+                } catch (e: JSONException){
+                    e.printStackTrace()
+                }
+            },
+            {error->
+                Toast.makeText(activity, "Error en la solicitud: {$error}", Toast.LENGTH_LONG).show()
+            }
+        )
+        queue.add(request)
+    }
+
+
+    suspend fun listaProductos(){
         var url= config.urlBase+"/api/list_product/v1/"
         var queue= Volley.newRequestQueue(activity)
         var request= JsonArrayRequest(
@@ -145,13 +202,10 @@ class store_fragment : Fragment() {
     }
 
 
-    suspend fun peticionCategoriaProducto(){
-
-    }
 
 
     fun cargarLista(listaProductos: JSONArray){
-        recycler.layoutManager= LinearLayoutManager(activity)
+        recyclerProducto.layoutManager= LinearLayoutManager(activity)
         var adapter= adapterHome(activity, listaProductos)
         // Cambio de fragmento desde otro
         adapter.onclick= {
@@ -163,7 +217,7 @@ class store_fragment : Fragment() {
             transaction.replace(R.id.container, fragmento).commit()
             transaction.addToBackStack(null)
         }
-        recycler.adapter=adapter
+        recyclerProducto.adapter=adapter
     }
 
 }

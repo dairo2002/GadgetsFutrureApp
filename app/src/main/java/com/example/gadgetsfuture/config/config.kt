@@ -11,7 +11,7 @@ class config {
         lateinit var token:String
         //crear una variable para almacenar la url base
         //puerto SENA:
-        //const val urlBase="http://192.168.244.200:8000"
+        //const val urlBase="http://192.168.61.200:8000"
         //puerto local:
         const val urlBase="http://192.168.1.10:8000"
 
