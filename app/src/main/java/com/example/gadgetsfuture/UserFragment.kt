@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 class UserFragment : Fragment() {
 
     private lateinit var cardEditarDatos: CardView
+    private lateinit var cardSuspender: CardView
     private lateinit var cardPedidosC: CardView
     private lateinit var historialPedidos: CardView
     private lateinit var cardCerrarSesion: CardView
@@ -39,6 +40,7 @@ class UserFragment : Fragment() {
         cardPedidosC = view.findViewById(R.id.cardPedidosC)
         historialPedidos = view.findViewById(R.id.historialPedidos)
         cardCerrarSesion = view.findViewById(R.id.cardCerrarSesion)
+        cardSuspender = view.findViewById(R.id.cardSuspender)
         cardContacto = view.findViewById(R.id.cardContacto)
         url = "https://wa.link/40y4dh"
 
@@ -80,11 +82,24 @@ class UserFragment : Fragment() {
                     Toast.makeText(activity, "Error al cerrar sesión $error", Toast.LENGTH_SHORT).show()
                 }
             }
-            // Limpiar las credenciales de inicio de sesión
-            //clearCredentials()
-            // Redirigir al usuario a la actividad de inicio de sesión
-            //redirectToLoginActivity()
+        }
 
+        cardSuspender.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    peticionDesactivarCuenta(
+                        onSuccess = {message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            redirectToLoginActivity()
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                } catch (error: Exception) {
+                    Toast.makeText(activity, "Error al cerrar sesión $error", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         return view
@@ -114,6 +129,27 @@ class UserFragment : Fragment() {
     suspend fun peticionCerrarSesion(onSuccess: (String) -> Unit, onError: (String) -> Unit){
         var queue= Volley.newRequestQueue(context)
         var url=config.urlCuenta+"v1/logout/"
+        var request = JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            null,
+            {response ->
+                val message = response.getString("message")
+                onSuccess.invoke(message)
+            },
+            {error ->
+                onError.invoke("Error en la solicitud: $error")
+            }
+        )
+        queue.add(request)
+    }
+
+
+
+    /** Corregir */
+    suspend fun peticionDesactivarCuenta(onSuccess: (String) -> Unit, onError: (String) -> Unit){
+        var queue= Volley.newRequestQueue(context)
+        var url=config.urlCuenta+"v2/deactivate_account/"
         var request = JsonObjectRequest(
             Request.Method.POST,
             url,

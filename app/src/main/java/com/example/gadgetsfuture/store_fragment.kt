@@ -128,7 +128,6 @@ class store_fragment : Fragment() {
 
 
     suspend fun peticionListaProductosC(){
-        // http://192.168.153.200:8000/api/list_product/v1/
         var url= config.urlBase+"/api/list_product/v1/"
         var queue= Volley.newRequestQueue(activity)
         var request= JsonArrayRequest(
@@ -143,6 +142,11 @@ class store_fragment : Fragment() {
             }
         )
         queue.add(request)
+    }
+
+
+    suspend fun peticionCategoriaProducto(){
+
     }
 
 

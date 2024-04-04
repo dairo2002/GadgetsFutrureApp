@@ -151,7 +151,6 @@
                             app:iconSize="15sp"
                             app:iconTint="#000000"
                             app:strokeColor="#000000"
-
                             app:strokeWidth="1sp"/>
 
                         <Button

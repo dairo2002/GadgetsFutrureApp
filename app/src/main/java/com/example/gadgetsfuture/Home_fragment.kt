@@ -103,8 +103,28 @@ class Home_fragment : Fragment() {
         }
     }
 
+    suspend fun peticionBusquedaDeProductos( palabraClave: String, onSuccess: (List<Producto>) -> Unit, onError: (String) -> Unit){
+        var queue=Volley.newRequestQueue(context)
+        val url = config.urlTienda+"v1/search_product/"
+        val request = JsonArrayRequest(
+            Request.Method.POST,
+            url,
+            null,
+            {response ->
+            
 
-    suspend fun peticionListaProductosH(){
+            },
+            {error ->
+
+            }
+
+
+        )
+
+    }
+
+
+            suspend fun peticionListaProductosH(){
         // http://192.168.153.200:8000/api/list_product/v1/
         var url=config.urlBase+"/api/list_product/v1/"
         var queue= Volley.newRequestQueue(activity)
@@ -138,5 +158,8 @@ class Home_fragment : Fragment() {
         }
         recycler.adapter=adapter
     }
+
+
+
 
 }
