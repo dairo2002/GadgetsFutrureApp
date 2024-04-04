@@ -1,5 +1,6 @@
 package com.example.gadgetsfuture
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,12 +11,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.bumptech.glide.Glide
 import com.example.gadgetsfuture.config.config
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import org.json.JSONObject
+import kotlinx.coroutines.launch
+
 
 class UserFragment : Fragment() {
 
@@ -28,10 +31,9 @@ class UserFragment : Fragment() {
     private lateinit var nombreCliente: TextView
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
+
         nombreCliente = view.findViewById(R.id.txtNombreUser)
         cardEditarDatos = view.findViewById(R.id.cardEditarDatos)
         cardPedidosC = view.findViewById(R.id.cardPedidosC)
@@ -60,10 +62,29 @@ class UserFragment : Fragment() {
         }
 
         cardCerrarSesion.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    peticionCerrarSesion(
+                        onSuccess = {message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            // Redirigir a la pantalla de inicio de sesión después de cerrar sesión exitosamente
+                            clearCredentials()
+                            redirectToLoginActivity()
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(this@UserFragment, errorMessage, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                } catch (error: Exception) {
+                    Toast.makeText(activity, "Error al cerrar sesión $error", Toast.LENGTH_SHORT).show()
+                }
+            }
             // Limpiar las credenciales de inicio de sesión
-            clearCredentials()
+            //clearCredentials()
             // Redirigir al usuario a la actividad de inicio de sesión
-            redirectToLoginActivity()
+            //redirectToLoginActivity()
+
         }
 
         return view
@@ -84,10 +105,30 @@ class UserFragment : Fragment() {
     }
 
     private fun redirectToLoginActivity() {
-        val intent = Intent(requireContext(), InicioSesion::class.java)
+        //val intent = Intent(requireContext(), InicioSesion::class.java)
+        val intent = Intent(context, InicioSesion::class.java)
         startActivity(intent)
         requireActivity().finish() // Cerrar la actividad actual (UserFragment)
     }
+
+    suspend fun peticionCerrarSesion(onSuccess: (String) -> Unit, onError: (String) -> Unit){
+        var queue= Volley.newRequestQueue(context)
+        var url=config.urlCuenta+"v1/logout/"
+        var request = JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            null,
+            {response ->
+                val message = response.getString("message")
+                onSuccess.invoke(message)
+            },
+            {error ->
+                onError.invoke("Error en la solicitud: $error")
+            }
+        )
+        queue.add(request)
+    }
+
     /*fun busca_cliente(){
         GlobalScope.launch {
             try {

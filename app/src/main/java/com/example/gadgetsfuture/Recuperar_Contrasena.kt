@@ -31,19 +31,19 @@ class Recuperar_Contrasena : AppCompatActivity() {
         txtRecuperarPassword = findViewById(R.id.txtRecuperarPassword)
 
         val btnRecuperarPwd = findViewById<Button>(R.id.btnRecuperarPwd)
-            btnRecuperarPwd.setOnClickListener {
-                GlobalScope.launch(Dispatchers.Main) {
-                    try {
-                        peticionRecuperarPwd()
-                        /*
-                        val intent = Intent(this@Recuperar_Contrasena, FrmPrincipal::class.java)
-                        startActivity(intent)
-                        finish()*/
-                    } catch (error: Exception) {
+        btnRecuperarPwd.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    peticionRecuperarPwd()
+                    /*
+                    val intent = Intent(this@Recuperar_Contrasena, FrmPrincipal::class.java)
+                    startActivity(intent)
+                    finish()*/
+                } catch (error: Exception) {
                         Toast.makeText(this@Recuperar_Contrasena, "Error en el registro: $error", Toast.LENGTH_SHORT).show()
-                    }
                 }
             }
+        }
     } 
 
     fun  inicioS(view: View) {
@@ -56,8 +56,8 @@ class Recuperar_Contrasena : AppCompatActivity() {
     }
 
     suspend fun peticionRecuperarPwd(){
-        var  url=config.urlCuenta+"v1/recover_password/"
-
+        var queue=Volley.newRequestQueue(context)
+        var url=config.urlCuenta+"v1/recover_password/"
         val correo = txtRecuperarPassword.text.toString()
 
         var parametro = JSONObject().apply {
@@ -76,7 +76,6 @@ class Recuperar_Contrasena : AppCompatActivity() {
                 Toast.makeText(this, "Error en la solicitud: $error", Toast.LENGTH_SHORT).show()
             }
         )
-        var queue= Volley.newRequestQueue(context)
         queue.add(request)
     }
 }
