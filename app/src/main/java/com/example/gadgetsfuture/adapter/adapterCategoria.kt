@@ -10,8 +10,7 @@ import com.example.gadgetsfuture.R
 import org.json.JSONArray
 import org.json.JSONObject
 
-class adapterCategoria(var context: Context?, var listaCategoria:JSONArray)
-    :RecyclerView.Adapter<adapterCategoria.MyHolder>(){
+class adapterCategoria(var context: Context?, var listaCategoria:JSONArray):RecyclerView.Adapter<adapterCategoria.MyHolder>(){
 
     inner class MyHolder(ItemCategoria : View):RecyclerView.ViewHolder(ItemCategoria) {
 
@@ -30,14 +29,15 @@ class adapterCategoria(var context: Context?, var listaCategoria:JSONArray)
 
     var onclick:((JSONObject)->Unit)?=null
     override fun onBindViewHolder(holder: adapterCategoria.MyHolder, position: Int) {
-        val categoria = listaCategoria.getJSONObject(position)
+        val listCategoria = listaCategoria.getJSONObject(position)
+        var nombre = listCategoria.getString("nombre")
 
-        // Traemos la categoiras
-        holder.btnCategorias.text=categoria.getString("nombre")
 
-        // Accion para que nos lleve a los productos de una categoria
+        holder.btnCategorias.text=nombre
+
+        // Acción para que nos lleve a los productos de una categoria
         holder.btnCategorias.setOnClickListener {
-            onclick?.invoke(categoria)
+            onclick?.invoke(listCategoria)
         }
     }
 

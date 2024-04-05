@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.example.gadgetsfuture.adapter.adapterCategDeProduct
 import com.example.gadgetsfuture.adapter.adapterCategoria
 import com.example.gadgetsfuture.adapter.adapterHome
 import com.example.gadgetsfuture.config.config
@@ -38,15 +39,20 @@ private const val ARG_PARAM2 = "param2"
  */
 class store_fragment : Fragment() {
 
+    private var id_categoria: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+
+            //id_categoria=it.getInt("id_categoria")
 
         }
     }
 
     lateinit var recyclerProducto: RecyclerView
     lateinit var recyclerCategoria: RecyclerView
+    lateinit var recyclerCategoriaDeProductos: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -85,13 +91,14 @@ class store_fragment : Fragment() {
         }*/
 
 
-        recyclerProducto= view.findViewById(R.id.RVStoreProductos)
+        recyclerProducto=view.findViewById(R.id.RVStoreProductos)
         llamarPeticionProductos()
 
-        recyclerCategoria= view.findViewById(R.id.RVCategorias)
+        recyclerCategoria=view.findViewById(R.id.RVCategorias)
         llamarPeticionCategoria()
 
-        llamarPeticionCategoriaDeProd()
+        recyclerCategoriaDeProductos=view.findViewById(R.id.RVCategoriaDeProductos)
+        //llamarPeticionCategoriaDeProd()
 
         return view
     }
@@ -143,35 +150,72 @@ class store_fragment : Fragment() {
     }
 
 
-    fun llamarPeticionCategoriaDeProd(){
+    /*fun llamarPeticionCategoriaDeProd(){
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                listaCategoria()
+                categoriaDeProductos(idCategoria)
             }catch (error: Exception){
                 Toast.makeText(activity, "Error en el servidor, por favor conectate a internet", Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    suspend fun categoriaDeProductos(){
-
-    }
+    }*/
 
 
-    suspend fun listaCategoria(){
-        var url= config.urlTienda+"v1/lista_categorias"
+    /** Productos de una categoria */
+
+    suspend fun categoriaDeProductos(idCategoria: Int){
+        // http://192.168.1.10:8000/tienda/api/v1/store/1/
+        var url= config.urlTienda+"v1/store/$idCategoria/"
         var queue= Volley.newRequestQueue(activity)
         var request= JsonArrayRequest(
             Request.Method.GET,
             url,
             null,
             {response->
-                try {
-                    //recycler.layoutManager = GridLayoutManager(activity,  3)
-                    recyclerCategoria.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                    val adapter = adapterCategoria(activity, listaCategoria = response)
-                    recyclerCategoria.adapter = adapter
+                cargarListaCategproduct(response)
+            },
+            {error->
+                Toast.makeText(activity, "Error en la solicitud: {$error}", Toast.LENGTH_LONG).show()
+            }
+        )
+        queue.add(request)
 
+    }
+
+
+
+    /** Corregir para que la dos apis no se ejcuten a al misma vez */
+    fun cargarListaCategproduct(listaCategDeProduct: JSONArray){
+        recyclerCategoriaDeProductos.layoutManager=LinearLayoutManager(activity)
+        var adapter= adapterCategDeProduct(activity, listaCategDeProduct)
+        adapter.onclick= {
+            val bundle=Bundle()
+            bundle.putInt("id_productoH",it.getInt("id"))
+            val transaction=requireFragmentManager().beginTransaction()
+            //var fragmento=detalle_producto()
+            //fragmento.arguments=bundle
+            var fragmento=store_fragment().apply {
+                arguments=bundle
+            }
+            transaction.replace(R.id.container, fragmento).commit()
+            transaction.addToBackStack(null)
+        }
+        recyclerCategoriaDeProductos.adapter=adapter
+    }
+
+
+    /** Categoria */
+
+    suspend fun listaCategoria(){
+        var queue= Volley.newRequestQueue(activity)
+        var url= config.urlTienda+"v1/lista_categorias/"
+        var request= JsonArrayRequest(
+            Request.Method.GET,
+            url,
+            null,
+            {response->
+                try {
+                    cargarListaCategoria(response)
                 } catch (e: JSONException){
                     e.printStackTrace()
                 }
@@ -183,6 +227,40 @@ class store_fragment : Fragment() {
         queue.add(request)
     }
 
+
+
+
+    fun cargarListaCategoria(listaCategoria: JSONArray){
+        recyclerCategoria.layoutManager= LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        var adapter= adapterCategoria(activity, listaCategoria)
+        adapter.onclick= {categoria ->
+            val idCategoria = categoria.getInt("id")
+            val bundle=Bundle().apply {
+                putInt("id_categoria", idCategoria)
+            }
+            //bundle.putInt("id_categoria",it.getInt("id"))
+            val transaction=requireFragmentManager().beginTransaction()
+            var fragmento=store_fragment().apply {
+                arguments=bundle
+            }
+            //fragmento.arguments=bundle
+            transaction.replace(R.id.container, fragmento).commit()
+            transaction.addToBackStack(null)
+
+            GlobalScope.launch {
+                try {
+                    categoriaDeProductos(idCategoria)
+                }catch (error: Exception){
+                    Toast.makeText(activity, "Error en el servidor, por favor conectate a internet", Toast.LENGTH_LONG).show()
+                }
+            }
+
+        }
+        recyclerCategoria.adapter=adapter
+    }
+
+
+    /** Productos */
 
     suspend fun listaProductos(){
         var url= config.urlBase+"/api/list_product/v1/"
@@ -200,8 +278,6 @@ class store_fragment : Fragment() {
         )
         queue.add(request)
     }
-
-
 
 
     fun cargarLista(listaProductos: JSONArray){
