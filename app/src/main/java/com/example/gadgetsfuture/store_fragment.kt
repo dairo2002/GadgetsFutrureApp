@@ -172,7 +172,8 @@ class store_fragment : Fragment() {
             url,
             null,
             {response->
-                cargarListaCategproduct(response)
+
+                cargarLista(response)
             },
             {error->
                 Toast.makeText(activity, "Error en la solicitud: {$error}", Toast.LENGTH_LONG).show()
@@ -235,7 +236,7 @@ class store_fragment : Fragment() {
         var adapter= adapterCategoria(activity, listaCategoria)
         adapter.onclick= {categoria ->
             val idCategoria = categoria.getInt("id")
-            val bundle=Bundle().apply {
+            /*al bundle=Bundle().apply {
                 putInt("id_categoria", idCategoria)
             }
             //bundle.putInt("id_categoria",it.getInt("id"))
@@ -245,7 +246,7 @@ class store_fragment : Fragment() {
             }
             //fragmento.arguments=bundle
             transaction.replace(R.id.container, fragmento).commit()
-            transaction.addToBackStack(null)
+            transaction.addToBackStack(null)*/
 
             GlobalScope.launch {
                 try {
