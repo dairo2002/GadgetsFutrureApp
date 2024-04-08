@@ -1,6 +1,5 @@
 package com.example.gadgetsfuture;
 
-import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,19 +9,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
-import com.example.gadgetsfuture.adapter.adapterCategDeProduct
 import com.example.gadgetsfuture.adapter.adapterCategoria
 import com.example.gadgetsfuture.adapter.adapterHome
 import com.example.gadgetsfuture.config.config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
@@ -168,27 +164,6 @@ class store_fragment : Fragment() {
 
     }
 
-
-
-    /* Corregir para que la dos apis no se ejcuten a al misma vez
-    fun cargarListaCategproduct(listaCategDeProduct: JSONArray){
-        recyclerCategoriaDeProductos.layoutManager=LinearLayoutManager(activity)
-        var adapter= adapterCategDeProduct(activity, listaCategDeProduct)
-        adapter.onclick= {
-            val bundle=Bundle()
-            bundle.putInt("id_productoH",it.getInt("id"))
-            val transaction=requireFragmentManager().beginTransaction()
-            //var fragmento=detalle_producto()
-            //fragmento.arguments=bundle
-            var fragmento=store_fragment().apply {
-                arguments=bundle
-            }
-            transaction.replace(R.id.container, fragmento).commit()
-            transaction.addToBackStack(null)
-        }
-        recyclerCategoriaDeProductos.adapter=adapter
-    }
-*/
 
     /** Categoria */
     suspend fun listaCategoria(){
