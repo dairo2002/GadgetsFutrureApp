@@ -56,7 +56,6 @@ class store_fragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-
         val view = inflater.inflate(R.layout.fragment_store_fragment, container, false)
 
         /*
@@ -98,7 +97,6 @@ class store_fragment : Fragment() {
         llamarPeticionCategoria()
 
         recyclerCategoriaDeProductos=view.findViewById(R.id.RVCategoriaDeProductos)
-        //llamarPeticionCategoriaDeProd()
 
         return view
     }
@@ -149,18 +147,6 @@ class store_fragment : Fragment() {
         }
     }
 
-
-    /*fun llamarPeticionCategoriaDeProd(){
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                categoriaDeProductos(idCategoria)
-            }catch (error: Exception){
-                Toast.makeText(activity, "Error en el servidor, por favor conectate a internet", Toast.LENGTH_LONG).show()
-            }
-        }
-    }*/
-
-
     /** Productos de una categoria */
 
     suspend fun categoriaDeProductos(idCategoria: Int){
@@ -172,7 +158,6 @@ class store_fragment : Fragment() {
             url,
             null,
             {response->
-
                 cargarLista(response)
             },
             {error->
@@ -185,7 +170,7 @@ class store_fragment : Fragment() {
 
 
 
-    /** Corregir para que la dos apis no se ejcuten a al misma vez */
+    /* Corregir para que la dos apis no se ejcuten a al misma vez
     fun cargarListaCategproduct(listaCategDeProduct: JSONArray){
         recyclerCategoriaDeProductos.layoutManager=LinearLayoutManager(activity)
         var adapter= adapterCategDeProduct(activity, listaCategDeProduct)
@@ -203,10 +188,9 @@ class store_fragment : Fragment() {
         }
         recyclerCategoriaDeProductos.adapter=adapter
     }
-
+*/
 
     /** Categoria */
-
     suspend fun listaCategoria(){
         var queue= Volley.newRequestQueue(activity)
         var url= config.urlTienda+"v1/lista_categorias/"
