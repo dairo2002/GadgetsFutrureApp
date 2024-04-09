@@ -26,7 +26,7 @@ class adapterHome (var context: Context?, var  listaProductoH:JSONArray)
         lateinit var lblprecioDescunto:TextView
         lateinit var lblporcentajeDescunto:TextView
         lateinit var imgProducto: ImageView
-        lateinit var btnCarrito: Button
+        lateinit var btnAggCarrito: Button
         lateinit var cardProductoH: CardView
 
         init {
@@ -35,7 +35,7 @@ class adapterHome (var context: Context?, var  listaProductoH:JSONArray)
             lblprecioDescunto=itemView.findViewById(R.id.lblDescuentoPrecioH)
             lblporcentajeDescunto=itemView.findViewById(R.id.lblPorcenDescuentoH)
             imgProducto=itemView.findViewById(R.id.imgProductoH)
-            btnCarrito=itemView.findViewById(R.id.btnCarritoH)
+            btnAggCarrito=itemView.findViewById(R.id.btnAgregarCarritoH)
             cardProductoH=itemView.findViewById(R.id.cardProductoH)
         }
 
@@ -72,6 +72,10 @@ class adapterHome (var context: Context?, var  listaProductoH:JSONArray)
 
         // cardProductoH nos lleva a detalle del producto
         holder.cardProductoH.setOnClickListener {
+            onclick?.invoke(producto)
+        }
+
+        holder.btnAggCarrito.setOnClickListener {
             onclick?.invoke(producto)
         }
 

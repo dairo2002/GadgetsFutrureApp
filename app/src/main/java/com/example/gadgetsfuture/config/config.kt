@@ -8,15 +8,17 @@ class config {
     companion object{
         lateinit var SharedPreferences: SharedPreferences
         //una variable para el token
-        lateinit var token:String
+        //una variable para el token
+        var token:String = ""
         //crear una variable para almacenar la url base
         //puerto SENA:
         //const val urlBase="http://192.168.61.200:8000"
         //puerto local:
         const val urlBase="http://192.168.1.10:8000"
-
+        //const val urlBase="http://192.168.105.200:8000"
 
         const val urlTienda="${urlBase}/tienda/api/"
         const val urlCuenta="${urlBase}/cuenta/api/"
+        const val urlCarrito="${urlBase}/carrito/api/"
     }
 }

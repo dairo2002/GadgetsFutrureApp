@@ -48,7 +48,6 @@ class store_fragment : Fragment() {
 
     lateinit var recyclerProducto: RecyclerView
     lateinit var recyclerCategoria: RecyclerView
-    lateinit var recyclerCategoriaDeProductos: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -91,8 +90,6 @@ class store_fragment : Fragment() {
 
         recyclerCategoria=view.findViewById(R.id.RVCategorias)
         llamarPeticionCategoria()
-
-        recyclerCategoriaDeProductos=view.findViewById(R.id.RVCategoriaDeProductos)
 
         return view
     }

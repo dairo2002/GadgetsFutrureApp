@@ -1,5 +1,6 @@
 package com.example.gadgetsfuture;
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,16 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.gadgetsfuture.adapter.adapterHome
 import com.example.gadgetsfuture.config.config
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,11 +51,7 @@ class Home_fragment : Fragment() {
     //Se define la variable que contiene el RecyclerView
     lateinit var recycler: RecyclerView
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
         var view= inflater.inflate(R.layout.fragment_home, container, false)
@@ -94,7 +94,7 @@ class Home_fragment : Fragment() {
     }
 
     fun llamarPeticion(){
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(IO).launch {
             try {
                 peticionListaProductosH()
             }catch (error: Exception){
@@ -103,30 +103,39 @@ class Home_fragment : Fragment() {
         }
     }
 
-    /*suspend fun peticionBusquedaDeProductos( palabraClave: String, onSuccess: (List<Producto>) -> Unit, onError: (String) -> Unit){
-        var queue=Volley.newRequestQueue(context)
-        val url = config.urlTienda+"v1/search_product/"
-        val request = JsonArrayRequest(
-            Request.Method.POST,
+    suspend fun agregarCarrito(id:Int){
+        var url = config.urlCarrito+"v1/agregar_carrito/"
+        var queue= Volley.newRequestQueue(activity)
+        val parametro = JSONObject().apply {
+            put("id", id)
+        }
+        val request = object : JsonObjectRequest(
+            Method.POST,
             url,
-            null,
+            parametro,
             {response ->
-            
-
+                Toast.makeText(activity, "Se agrego el producto", Toast.LENGTH_LONG).show()
             },
             {error ->
-
+                Toast.makeText(activity, "Error $error", Toast.LENGTH_LONG).show()
             }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                // Agregar el token de autenticación a los encabezados si está disponible en config
+                if (config.token.isNotEmpty()) {
+                    headers["Authorization"] = "Bearer ${config.token}"
+                }
+                return headers
+            }
+        }
+        queue.add(request)
 
-
-        )
-
-    }*/
-
+    }
 
     suspend fun peticionListaProductosH(){
         var url=config.urlBase+"/api/list_product/v1/"
-        var queue= Volley.newRequestQueue(activity)
+        var queue= Volley.newRequestQueue(requireActivity())
         var request= JsonArrayRequest(
             Request.Method.GET,
             url,
@@ -141,24 +150,35 @@ class Home_fragment : Fragment() {
         queue.add(request)
     }
 
-
     fun cargarLista(listaProductos: JSONArray){
-        recycler.layoutManager= LinearLayoutManager(activity)
-        var adapter= adapterHome(activity, listaProductos)
+        recycler.layoutManager= LinearLayoutManager(requireActivity())
+        var adapter= adapterHome(requireActivity(), listaProductos)
+        //var adapter= adapterHome(activity, listaProductos)
         // Cambio de fragmento desde otro
-        adapter.onclick= {
-            val bundle=Bundle()
-            bundle.putInt("id_productoH",it.getInt("id"))
+        adapter.onclick= {producto ->
+            val productoId = producto.getInt("id")
+            val bundle=Bundle().apply {
+                putInt("id_productoH", productoId)
+
+            }
             val transaction=requireFragmentManager().beginTransaction()
             var fragmento=detalle_producto()
             fragmento.arguments=bundle
-            transaction.replace(R.id.container, fragmento).commit()
+            transaction.replace(R.id.container, fragmento)
             transaction.addToBackStack(null)
+            GlobalScope.launch {
+                try {
+                    agregarCarrito(productoId)
+                    // Corregir
+                    //val intent = Intent(activity, Cart_fragment::class.java)
+                    //startActivity(intent)
+                } catch (error: Exception)    {
+                    Toast.makeText(activity, "Error en la petición: {$error}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            transaction.commit()
         }
         recycler.adapter=adapter
     }
-
-
-
 
 }
