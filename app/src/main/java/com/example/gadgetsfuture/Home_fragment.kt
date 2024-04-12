@@ -18,8 +18,7 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.gadgetsfuture.adapter.adapterHome
 import com.example.gadgetsfuture.config.config
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -94,7 +93,7 @@ class Home_fragment : Fragment() {
     }
 
     fun llamarPeticion(){
-        CoroutineScope(IO).launch {
+        GlobalScope.launch {
             try {
                 peticionListaProductosH()
             }catch (error: Exception){
@@ -122,7 +121,6 @@ class Home_fragment : Fragment() {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                // Agregar el token de autenticación a los encabezados si está disponible en config
                 if (config.token.isNotEmpty()) {
                     headers["Authorization"] = "Bearer ${config.token}"
                 }
@@ -135,7 +133,7 @@ class Home_fragment : Fragment() {
 
     suspend fun peticionListaProductosH(){
         var url=config.urlBase+"/api/list_product/v1/"
-        var queue= Volley.newRequestQueue(requireActivity())
+        var queue= Volley.newRequestQueue(activity)
         var request= JsonArrayRequest(
             Request.Method.GET,
             url,
@@ -151,10 +149,8 @@ class Home_fragment : Fragment() {
     }
 
     fun cargarLista(listaProductos: JSONArray){
-        recycler.layoutManager= LinearLayoutManager(requireActivity())
-        var adapter= adapterHome(requireActivity(), listaProductos)
-        //var adapter= adapterHome(activity, listaProductos)
-        // Cambio de fragmento desde otro
+        recycler.layoutManager= LinearLayoutManager(activity)
+        var adapter= adapterHome(activity, listaProductos)
         adapter.onclick= {producto ->
             val productoId = producto.getInt("id")
             val bundle=Bundle().apply {

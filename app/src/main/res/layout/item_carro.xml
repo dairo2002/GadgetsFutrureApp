@@ -50,6 +50,8 @@
                         android:src="@drawable/x"
                         android:layout_gravity="top|end"/>
 
+
+
                     <TextView
                         android:id="@+id/lblNombreCart"
                         android:layout_width="wrap_content"
@@ -60,27 +62,36 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/lblPrecioCart"
+                        android:id="@+id/lblIdCart"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="Precio "
-                        android:textSize="18sp" />
+                        android:layout_height="wrap_content"/>
 
-                    <TextView
+
+                    <!-- <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Sub Total"
-                        android:textSize="18sp" />
+                        android:textSize="18sp" /> -->
+
 
                     <EditText
                         android:id="@+id/lblSubtotalCart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:text="70.000"
+                        android:text="subtotal"
+
                         android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/lblPrecioCart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="40dp"
+                        android:text="Precio "
+                        android:textSize="15sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
