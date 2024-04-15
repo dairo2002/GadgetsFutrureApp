@@ -110,7 +110,8 @@ class adapterCarrito (var context: Context?, var  listaCarrito:JSONArray)
 
 
         holder.lblNombre.text = nombre
-        holder.txtCantidad.addTextChangedListener(object : TextWatcher {
+
+       /* holder.txtCantidad.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -121,8 +122,9 @@ class adapterCarrito (var context: Context?, var  listaCarrito:JSONArray)
                     //actu(idCarrito, nuevaCantidad)
                 }
             }
-        })
-        //holder.txtCantidad.setText(cantidad.toString())
+        })*/
+
+        holder.txtCantidad.setText(cantidad.toString())
         holder.lblPrecio.text = "$formatoPrecio"
         holder.lblSubtotal.text = "$formatoSubtotal"
         //holder.lblTotal.text = "$formatoTotal"

@@ -2,17 +2,27 @@ package com.example.gadgetsfuture
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.example.gadgetsfuture.config.config
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 
 class FrmPrincipal : AppCompatActivity() {
 
-
-    private  lateinit var bottomNavigationView: BottomNavigationView
-    private  lateinit var cart: Cart_fragment
-    private  lateinit var home: Home_fragment
-    private  lateinit var store: store_fragment
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var cart: Cart_fragment
+    private lateinit var home: Home_fragment
+    private lateinit var store: store_fragment
     private lateinit var user: UserFragment
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +39,19 @@ class FrmPrincipal : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(R.id.container, home).commit()
 
-        // Badge que muestra la cantidad de los productos
-        val badge = bottomNavigationView.getOrCreateBadge(R.id.cart)
-        badge.isVisible = true
-        badge.number = 5
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                contador_productos()
+
+            } catch (error: Exception) {
+                Toast.makeText(
+                    applicationContext,
+                    "Error en el servidor",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -59,7 +78,41 @@ class FrmPrincipal : AppCompatActivity() {
                 else -> false
             }
         }
+    }
 
+    suspend fun contador_productos() {
+        val url = config.urlCarrito + "v1/contar_productos/"
+        val queue = Volley.newRequestQueue(applicationContext)
+
+        val request = object : JsonObjectRequest(
+            Method.GET,
+            url,
+            null,
+            { response ->
+                try {
+                    val contador = response.getInt("contador")
+                    //Badge que muestra la cantidad de los productos
+                    val badge = bottomNavigationView.getOrCreateBadge(R.id.cart)
+                    badge.isVisible = true
+                    badge.number = contador
+                } catch (e: NumberFormatException) {
+                    // Handle specific NumberFormatException if the response is not an integer
+                    Toast.makeText(applicationContext, "Error: Invalid response format", Toast.LENGTH_LONG).show()
+                }
+            },
+            { error ->
+                Toast.makeText(applicationContext, "Error: $error", Toast.LENGTH_LONG).show()
+            }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                if (config.token.isNotEmpty()) {
+                    headers["Authorization"] = "Bearer ${config.token}"
+                }
+                return headers
+            }
+        }
+        queue.add(request)
     }
 
 }

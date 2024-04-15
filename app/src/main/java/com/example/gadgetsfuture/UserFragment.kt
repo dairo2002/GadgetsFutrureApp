@@ -49,10 +49,6 @@ class UserFragment : Fragment() {
             startActivity(edit)
         }
 
-        cardPedidosC.setOnClickListener {
-            val pedi = Intent(requireContext(), Pedidos_EnCamino::class.java)
-            startActivity(pedi)
-        }
 
         historialPedidos.setOnClickListener {
             val histo = Intent(requireContext(), Historial_pedidos::class.java)

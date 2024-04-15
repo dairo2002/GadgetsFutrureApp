@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Contacto:"
+                android:layout_marginTop="50dp"
+                android:textSize="25dp"
+                android:layout_marginLeft="30dp"
+                android:textColor="@color/black"
+                />
+
+            <EditText
+                android:id="@+id/txtCorreoPedido"
+                android:layout_width="343dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Detalles De Facturación:"
+                android:layout_marginTop="20dp"
+                android:textSize="22dp"
+                android:layout_marginLeft="30dp"
+                android:textColor="@color/black"
+                />
+
+            <EditText
+                android:id="@+id/txtNombrePedido"
+                android:layout_width="343dp"
+                android:layout_marginTop="25dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:hint="Nombre"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/txtApellidoPedido"
+                android:layout_width="343dp"
+                android:layout_marginTop="25dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:hint="Apellido"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/txtTelefonoPedidos"
+                android:layout_width="343dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="25dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:hint="Número telefónico"
+                android:inputType="phone" />
+
+            <EditText
+                android:id="@+id/txtDireccionPedido"
+                android:layout_width="343dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="25dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:hint="Dirección"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/lblDireccionLocal"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="25dp"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/txtDireccionLocal"
+                android:layout_width="343dp"
+                android:layout_marginTop="25dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:height="101dp"
+                android:visibility="gone"
+                android:hint="Agregar apartamento,local,ect."
+                android:background="@drawable/borde_text"
+                android:paddingStart="7dp"
+                android:inputType="text"
+                android:layout_below="@+id/lblDireccionLocal"/>
+
+
+            <TextView
+                android:id="@+id/departamentos"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Departamento:"
+                android:layout_marginTop="20dp"
+                android:textSize="22dp"
+                android:layout_marginLeft="30dp"
+                android:textColor="@color/black"
+                />
+
+
+            <Spinner
+                android:id="@+id/sprDepartamentoPedido"
+                android:layout_width="343dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/borde_text"
+
+                />
+
+            <TextView
+                android:id="@+id/ciudad"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Municipio:"
+                android:layout_marginTop="20dp"
+                android:textSize="22dp"
+                android:layout_marginStart="30dp"
+                android:textColor="@color/black"
+                />
+
+
+            <Spinner
+                android:id="@+id/sprMunicipioPedido"
+                android:layout_width="343dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/borde_text"
+                />
+
+            <TextView
+                android:id="@+id/codigoP"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Codigo Postal:"
+                android:layout_marginTop="20dp"
+                android:textSize="22dp"
+                android:layout_marginStart="30dp"
+                android:textColor="@color/black"
+                />
+
+
+            <EditText
+                android:id="@+id/txtCodigoPostalPedido"
+                android:layout_width="343dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/btnContinuarPago"
+                android:layout_width="276dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="50dp"
+                android:text="Continuar con el pago"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

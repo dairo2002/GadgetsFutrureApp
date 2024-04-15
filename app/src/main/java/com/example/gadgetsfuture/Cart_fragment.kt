@@ -37,29 +37,48 @@ private const val ARG_PARAM2 = "param2"
  * Use the [Cart_fragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class Cart_fragment : Fragment() {
 
-    lateinit var recyclerCarrito: RecyclerView
-    lateinit var btnActualizar: Button
     lateinit var ID: TextView
-    lateinit var cantidad: EditText
+    lateinit var btnMas :Button
+    lateinit var btnMenos :Button
+    lateinit var txtCantidad: EditText
+    lateinit var btnActualizar: Button
+    lateinit var btnRealizarPedido: Button
+    lateinit var recyclerCarrito: RecyclerView
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+
 
         }
     }
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cart, container, false)
         recyclerCarrito = view.findViewById(R.id.RVCart)
+
+        /*txtCantidad = view.findViewById(R.id.txtCantidadCart)
+        btnMas = view.findViewById(R.id.btnMenosCantCart)
+        btnMas = view.findViewById(R.id.btnMasCantCart)*/
+
         btnActualizar = view.findViewById(R.id.btnActualizarCart)
+        btnRealizarPedido = view.findViewById(R.id.btnRealizarPedido)
+
+        btnRealizarPedido.setOnClickListener {
+            val transaction=requireFragmentManager().beginTransaction()
+            var fragmento=pedido_fragment()
+            transaction.replace(R.id.container, fragmento)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
         peticionMostarCarrito()
 
         /*btnActualizar.setOnClickListener {
@@ -174,9 +193,7 @@ class Cart_fragment : Fragment() {
     }
 
 
-
-
-    /*suspend fun actualizarCarrito(id: Int, cantidad: Int) {
+    suspend fun actualizarCarrito(id: Int, cantidad: Int) {
         var url = config.urlCarrito + "v1/actualizar_carrito/"
         var queue = Volley.newRequestQueue(context)
         val parametros = JSONObject().apply {
@@ -210,48 +227,6 @@ class Cart_fragment : Fragment() {
         }
         queue.add(request)
 
-    }*/
-
-    suspend fun actualizarCarrito(id: Int, nuevaCantidad: Int) {
-        // Construye la URL para la solicitud de actualización del carrito
-        val url = config.urlCarrito + "v1/actualizar_carrito/"
-
-        // Crea un objeto JSONObject con los parámetros de la solicitud
-        val parametros = JSONObject().apply {
-            put("id", id)
-            put("cantidad", nuevaCantidad)
-        }
-
-        try {
-            // Realiza la solicitud de actualización del carrito
-            val response = withContext(Dispatchers.IO) {
-                // Crea una nueva cola de solicitudes de Volley
-                val queue = Volley.newRequestQueue(context)
-
-                // Crea una solicitud JsonObjectRequest para la actualización del carrito
-                val request = JsonObjectRequest(
-                    Request.Method.PUT,
-                    url,
-                    parametros,
-                    { response ->
-                        // Procesa la respuesta del servidor aquí
-                        // Por ejemplo, puedes mostrar un mensaje de éxito
-                        Toast.makeText(activity, "Actualizado", Toast.LENGTH_LONG).show()
-                        //cargarListaCarrito(response)
-                    },
-                    { error ->
-                        // Manejo de errores en caso de que la solicitud falle
-                        Toast.makeText(activity, "Error: $error", Toast.LENGTH_LONG).show()
-                    }
-                )
-
-                // Añade la solicitud a la cola de solicitudes de Volley
-                queue.add(request)
-            }
-        } catch (e: Exception) {
-            // Manejo de errores en caso de que ocurra una excepción
-            Toast.makeText(activity, "Error: $e", Toast.LENGTH_LONG).show()
-        }
     }
 
 
@@ -295,6 +270,14 @@ class Cart_fragment : Fragment() {
         //adapter.notifyDataSetChanged()
         recyclerCarrito.adapter = adapter
     }
+
+
+    suspend fun realizarPedido(){
+
+    }
+
+
+
 }
 
     /*fun cargarListaCarrito(listaCarrito: JSONArray){

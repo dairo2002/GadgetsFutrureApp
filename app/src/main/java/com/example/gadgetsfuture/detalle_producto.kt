@@ -45,10 +45,8 @@ class detalle_producto : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
             //Obtener le id del producto
             id_producto=it.getInt("id_productoH")
-
         }
     }
 

@@ -155,19 +155,19 @@ class Home_fragment : Fragment() {
             val productoId = producto.getInt("id")
             val bundle=Bundle().apply {
                 putInt("id_productoH", productoId)
-
             }
             val transaction=requireFragmentManager().beginTransaction()
             var fragmento=detalle_producto()
             fragmento.arguments=bundle
             transaction.replace(R.id.container, fragmento)
             transaction.addToBackStack(null)
-            GlobalScope.launch {
+            GlobalScope.launch(Dispatchers.Main) {
                 try {
                     agregarCarrito(productoId)
-                    // Corregir
-                    //val intent = Intent(activity, Cart_fragment::class.java)
-                    //startActivity(intent)
+                    if (activity?.isFinishing == false) {
+                        val intent = Intent(activity, Cart_fragment::class.java)
+                        startActivity(intent)
+                    }
                 } catch (error: Exception)    {
                     Toast.makeText(activity, "Error en la petición: {$error}", Toast.LENGTH_SHORT).show()
                 }
@@ -176,5 +176,7 @@ class Home_fragment : Fragment() {
         }
         recycler.adapter=adapter
     }
+
+
 
 }

@@ -101,8 +101,10 @@
                         android:layout_marginBottom="20dp"
                         android:layout_gravity="end|bottom">
 
-                        <Button
-                            android:layout_width="38dp"
+
+                     <Button
+                            android:id="@+id/btnMenosCantCart"
+                            android:layout_width="50dp"
                             android:layout_height="32dp"
                             android:drawableTop="@drawable/resta"
                             android:layout_gravity="center"
@@ -111,7 +113,7 @@
 
                         <EditText
                             android:id="@+id/txtCantidadCart"
-                            android:layout_width="40dp"
+                            android:layout_width="32dp"
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:text="1"
@@ -119,13 +121,30 @@
                             android:textAlignment="center"/>
 
                         <Button
-                            android:layout_width="40dp"
-                            android:layout_height="30dp"
+                            android:id="@+id/btnMasCantCart"
+                            android:layout_width="50dp"
+                            android:layout_height="32dp"
                             android:drawableTop="@drawable/suma"
                             android:layout_gravity="center"
                             android:background="@drawable/borde_suma_resta_carro"
                             />
+
                     </LinearLayout>
+
+                    <!-- <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/marcoIpRed"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/cmpIpRed"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="cantidad"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textSize="18sp" />
+                    </com.google.android.material.textfield.TextInputLayout> -->
 
                 </LinearLayout>
 

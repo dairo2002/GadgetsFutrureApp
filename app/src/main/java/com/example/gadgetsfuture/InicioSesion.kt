@@ -86,6 +86,7 @@ class InicioSesion : AppCompatActivity() {
         }
     }
 
+    //private suspend fun login():Boolean{
     private suspend fun login():Boolean{
         var peticion:Boolean = false
         var inicioExitoso:Boolean = false
@@ -105,7 +106,6 @@ class InicioSesion : AppCompatActivity() {
             url,
             parametros,
             {response->
-                //cuando la respuesta es positiva
                 val message = response.getString("message")
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 inicioExitoso = true
@@ -114,10 +114,7 @@ class InicioSesion : AppCompatActivity() {
                 // Obtener el token de la respuesta y guardarlo
                 val token = response.getString("token")
                 config.token = token
-                /*if (token.isNotEmpty()) {
-                    config.token = token
-                }*/
-                saveCredentials(username, password) // Guardar las credenciales
+                //saveCredentials(username, password) // Guardar las credenciales
             },
             {error->
                 inicioExitoso = false
