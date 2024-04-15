@@ -103,7 +103,7 @@
 
 
                      <Button
-                            android:id="@+id/btnMenosCantCart"
+                            android:id="@+id/btnMenos"
                             android:layout_width="50dp"
                             android:layout_height="32dp"
                             android:drawableTop="@drawable/resta"
@@ -121,7 +121,7 @@
                             android:textAlignment="center"/>
 
                         <Button
-                            android:id="@+id/btnMasCantCart"
+                            android:id="@+id/btnMas"
                             android:layout_width="50dp"
                             android:layout_height="32dp"
                             android:drawableTop="@drawable/suma"

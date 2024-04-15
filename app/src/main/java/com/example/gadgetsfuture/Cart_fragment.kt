@@ -1,5 +1,6 @@
 package com.example.gadgetsfuture;
 
+import adapterCarrito
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -17,8 +18,6 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.gadgetsfuture.adapter.adapterCarrito
-import com.example.gadgetsfuture.adapter.adapterHome
 import com.example.gadgetsfuture.config.config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

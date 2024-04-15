@@ -128,7 +128,6 @@ class Home_fragment : Fragment() {
             }
         }
         queue.add(request)
-
     }
 
     suspend fun peticionListaProductosH(){
