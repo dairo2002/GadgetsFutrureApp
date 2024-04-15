@@ -1,5 +1,6 @@
 package com.example.gadgetsfuture
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -80,7 +81,36 @@ class UserFragment : Fragment() {
             }
         }
 
-        cardSuspender.setOnClickListener {
+        /*cardSuspender.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.apply {
+                setTitle("Confirmación")
+                setMessage("¿Estás seguro de que deseas suspender tu cuenta?")
+                setPositiveButton("Aceptar") { dialog, which ->
+                    GlobalScope.launch(Dispatchers.Main) {
+                        try {
+                            peticionDesactivarCuenta(
+                                onSuccess = { message ->
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                    redirectToLoginActivity()
+                                },
+                                onError = { errorMessage ->
+                                    Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        } catch (error: Exception) {
+                            Toast.makeText(activity, "Error al cerrar sesión $error", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                setNegativeButton("Cancelar", null)
+            }
+            val dialog = builder.create()
+            dialog.show()
+        }*/
+
+
+        /*cardSuspender.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
                 try {
                     peticionDesactivarCuenta(
@@ -96,7 +126,7 @@ class UserFragment : Fragment() {
                     Toast.makeText(activity, "Error al cerrar sesión $error", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
+        }*/
 
         return view
     }
@@ -145,8 +175,8 @@ class UserFragment : Fragment() {
     /** Corregir */
     suspend fun peticionDesactivarCuenta(onSuccess: (String) -> Unit, onError: (String) -> Unit){
         var queue= Volley.newRequestQueue(context)
-        var url=config.urlCuenta+"v2/deactivate_account/"
-        var request = JsonObjectRequest(
+        var url=config.urlCuenta+"v1/deactivate_account/"
+        var request = object : JsonObjectRequest(
             Request.Method.POST,
             url,
             null,
@@ -157,7 +187,15 @@ class UserFragment : Fragment() {
             {error ->
                 onError.invoke("Error en la solicitud: $error")
             }
-        )
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                if (config.token.isNotEmpty()) {
+                    headers["Authorization"] = "Bearer ${config.token}"
+                }
+                return headers
+            }
+        }
         queue.add(request)
     }
 
