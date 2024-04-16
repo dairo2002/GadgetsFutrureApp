@@ -1,12 +1,11 @@
 package com.example.gadgetsfuture;
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -18,7 +17,6 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.gadgetsfuture.adapter.adapterHome
 import com.example.gadgetsfuture.config.config
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -128,6 +126,7 @@ class Home_fragment : Fragment() {
             }
         }
         queue.add(request)
+
     }
 
     suspend fun peticionListaProductosH(){
@@ -154,19 +153,28 @@ class Home_fragment : Fragment() {
             val productoId = producto.getInt("id")
             val bundle=Bundle().apply {
                 putInt("id_productoH", productoId)
+
             }
             val transaction=requireFragmentManager().beginTransaction()
             var fragmento=detalle_producto()
             fragmento.arguments=bundle
             transaction.replace(R.id.container, fragmento)
             transaction.addToBackStack(null)
-            GlobalScope.launch(Dispatchers.Main) {
+            transaction.commit()
+        }
+        adapter.onClickCar= {producto ->
+            val productoId = producto.getInt("id")
+            val transaction=requireFragmentManager().beginTransaction()
+            var fragmento=Cart_fragment()
+
+            transaction.replace(R.id.container, fragmento)
+            transaction.addToBackStack(null)
+            GlobalScope.launch {
                 try {
                     agregarCarrito(productoId)
-                    if (activity?.isFinishing == false) {
-                        val intent = Intent(activity, Cart_fragment::class.java)
-                        startActivity(intent)
-                    }
+                    // Corregir
+                    //val intent = Intent(activity, Cart_fragment::class.java)
+                    //startActivity(intent)
                 } catch (error: Exception)    {
                     Toast.makeText(activity, "Error en la petición: {$error}", Toast.LENGTH_SHORT).show()
                 }
@@ -175,7 +183,5 @@ class Home_fragment : Fragment() {
         }
         recycler.adapter=adapter
     }
-
-
 
 }

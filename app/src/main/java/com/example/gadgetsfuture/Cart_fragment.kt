@@ -51,10 +51,7 @@ class Cart_fragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-
-        }
+        arguments?.let {}
     }
 
 
@@ -65,9 +62,12 @@ class Cart_fragment : Fragment() {
         recyclerCarrito = view.findViewById(R.id.RVCart)
         lblTotal = view.findViewById(R.id.lblTotalCarrito)
 
+
         /*txtCantidad = view.findViewById(R.id.txtCantidadCart)
         btnMas = view.findViewById(R.id.btnMenosCantCart)
         btnMas = view.findViewById(R.id.btnMasCantCart)*/
+
+
 
         btnActualizar = view.findViewById(R.id.btnActualizarCart)
         btnRealizarPedido = view.findViewById(R.id.btnRealizarPedido)
@@ -80,10 +80,10 @@ class Cart_fragment : Fragment() {
             transaction.commit()
         }
 
-        //recyclerCarrito.layoutManager = LinearLayoutManager(activity)
-        //var adapter = adapterCarrito(requireContext(), listaCarrito)
 
         peticionMostarCarrito()
+
+
 
         /*btnActualizar.setOnClickListener {
             GlobalScope.launch {
@@ -158,26 +158,24 @@ class Cart_fragment : Fragment() {
     /** Corregir */
     suspend fun eliminarCarrito(id: Int) {
         var url = config.urlCarrito + "v1/eliminar_carrito/"
-        var queue = Volley.newRequestQueue(requireContext())
-        /*val parametro = JSONObject().apply {
+        var queue = Volley.newRequestQueue(requireContext())/*val parametro = JSONObject().apply {
             put("id", id)
         }*/
 
-        var request =
-            object : JsonObjectRequest(Request.Method.DELETE, url, null, { response ->
-                val message = response.getString("message")
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }, { error ->
-                Toast.makeText(requireContext(), "Error: $error", Toast.LENGTH_LONG).show()
-            }) {
-                override fun getHeaders(): MutableMap<String, String> {
-                    val headers = HashMap<String, String>()
-                    if (config.token.isNotEmpty()) {
-                        headers["Authorization"] = "Bearer ${config.token}"
-                    }
-                    return headers
+        var request = object : JsonObjectRequest(Request.Method.DELETE, url, null, { response ->
+            val message = response.getString("message")
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }, { error ->
+            Toast.makeText(requireContext(), "Error: $error", Toast.LENGTH_LONG).show()
+        }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                if (config.token.isNotEmpty()) {
+                    headers["Authorization"] = "Bearer ${config.token}"
                 }
+                return headers
             }
+        }
         queue.add(request)
     }
 
@@ -218,14 +216,24 @@ class Cart_fragment : Fragment() {
         var adapter = adapterCarrito(requireContext(), listaCarrito)
         adapter.onclick = { carrito ->
             var idCart = carrito.getInt("id")
+            var total = 0.0
+
+            val cantidad = carrito.getInt("cantidad")
+            val precio = carrito.getDouble("precio")
+            total += cantidad * precio
+
+            // Muestra el total en el TextView
+            lblTotal.text = total.toString()
+            adapter.notifyDataSetChanged()
+
+
+
             GlobalScope.launch {
                 try {
                     //eliminarCarrito(idCart)
                 } catch (error: Exception) {
                     Toast.makeText(
-                        requireContext(),
-                        "Error en la petición: {$error}",
-                        Toast.LENGTH_SHORT
+                        requireContext(), "Error en la petición: {$error}", Toast.LENGTH_SHORT
                     ).show()
                 }
             }

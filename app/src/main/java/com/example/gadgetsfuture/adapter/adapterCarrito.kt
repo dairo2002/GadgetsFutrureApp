@@ -92,6 +92,14 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
         }
     }
 
+    /*fun total(){
+        val carrito = listaCarrito.getJSONObject(position)
+        var cantidad = carrito.getInt("cantidad")
+        val precio = carrito.getDouble("precio")
+        var subtotal = cantidad * precio
+
+    }*/
+
     private fun sumarCantidad(textView: TextView) {
         var cantidad = textView.text.toString().toIntOrNull() ?: 0
         cantidad++

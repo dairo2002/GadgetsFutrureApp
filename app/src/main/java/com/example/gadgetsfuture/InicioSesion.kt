@@ -124,7 +124,7 @@ class InicioSesion : AppCompatActivity() {
         queue.add(request)
 
         while (peticion == false) {
-            delay(500)
+            delay(100)
         }
         return inicioExitoso
     }
@@ -150,7 +150,11 @@ class InicioSesion : AppCompatActivity() {
         val checkBoxMostrarContrasena: CheckBox = findViewById(R.id.checkBoxMostrarContrasena)
         val password: EditText = findViewById(R.id.txtContra)
 
+        val defaultTypeface = password.typeface
+
         checkBoxMostrarContrasena.setOnCheckedChangeListener() { buttonView, isChecked ->
+            val selectionStart = password.selectionStart
+            val selectionEnd = password.selectionEnd
             if (isChecked) {
                 password.inputType =
                     android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
@@ -158,6 +162,10 @@ class InicioSesion : AppCompatActivity() {
                 password.inputType =
                     android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
+
+            password.typeface = defaultTypeface
+
+            password.setSelection(selectionStart, selectionEnd)
         }
     }
 }

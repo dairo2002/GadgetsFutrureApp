@@ -8,8 +8,8 @@
     <item
         android:drawable="@drawable/logogadgetsfuture"
         android:gravity="center"
-        android:height="150dp"
-        android:width="430dp">
+        android:height="130dp"
+        android:width="350dp">
 
     </item>
 

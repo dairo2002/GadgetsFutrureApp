@@ -24,22 +24,181 @@
                     android:id="@+id/btnBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/arrow_left_white"
-                    android:background="#00000000"/>
+                    android:background="#00000000"
+                    android:src="@drawable/arrow_left_white" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="40dp"
                     android:text="Datos personales"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="40dp"/>
+                    android:textStyle="bold" />
 
             </androidx.appcompat.widget.Toolbar>
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="Actualizar datos personales"
+                android:textColor="#000000"
+                android:textAlignment="center"
+                android:textSize="23sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="275dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="Nombre:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/txtNombre"
+                android:layout_width="275dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:ems="10"
+                android:hint="Ingrese su nombre..."
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/nameError"
+                android:layout_width="271dp"
+                android:layout_height="wrap_content"
+                android:textColor="#D80000"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="275dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:text="Apellidos:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtNum"
+                android:layout_width="275dp"
+                android:layout_height="45dp"
+                android:background="@drawable/borde_text"
+                android:ems="10"
+                android:hint="Ingrese sus apellidos"
+                android:inputType="phone"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/numError"
+                android:layout_width="271dp"
+                android:layout_height="wrap_content"
+                android:textColor="#D80000"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="275dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:text="Numero de celular:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtEmail"
+                android:layout_width="275dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:ems="10"
+                android:hint="Ingrese su telefono..."
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/emailError"
+                android:layout_width="271dp"
+                android:layout_height="wrap_content"
+                android:textColor="#D80000"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:layout_width="275dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:text="Contraseña nueva:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtPassword"
+                android:layout_width="275dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:ems="10"
+                android:hint="Actualizar contraseña..."
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:layout_width="275dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="25dp"
+                android:text="Confirmar contraseña:"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtConfirmPass"
+                android:layout_width="275dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/borde_text"
+                android:ems="10"
+                android:hint="Confirma la contraseña..."
+                android:inputType="textEmailAddress" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="30dp">
+
+                <Button
+                    android:id="@+id/btnGuardar"
+                    android:layout_width="271dp"
+                    android:layout_height="wrap_content"
+                    android:text="Guardar cambios"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

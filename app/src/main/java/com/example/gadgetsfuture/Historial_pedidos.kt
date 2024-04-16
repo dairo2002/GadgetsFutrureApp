@@ -30,8 +30,8 @@ class Historial_pedidos : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_historial_pedidos)
 
-        context=applicationContext
-        recycler=findViewById(R.id.RVHistorialPedidos)
+        context = applicationContext
+        recycler = findViewById(R.id.RVHistorialPedidos)
 
         val btnBack: ImageButton = findViewById(R.id.btnBack)
         btnBack.setOnClickListener {
@@ -50,8 +50,6 @@ class Historial_pedidos : AppCompatActivity() {
                 ).show()
             }
         }
-
-
     }
 
     suspend fun HistorialPedidos() {

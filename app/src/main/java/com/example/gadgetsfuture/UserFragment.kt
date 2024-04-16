@@ -43,7 +43,7 @@ class UserFragment : Fragment() {
         cardCerrarSesion = view.findViewById(R.id.cardCerrarSesion)
         cardSuspender = view.findViewById(R.id.cardSuspender)
         cardContacto = view.findViewById(R.id.cardContacto)
-        url = "https://wa.link/40y4dh"
+        url = "https://w.app/GadgetsFuture"
 
         cardEditarDatos.setOnClickListener {
             val edit = Intent(requireContext(), Editar_datos::class.java)
@@ -109,24 +109,7 @@ class UserFragment : Fragment() {
             dialog.show()
         }
 
-
-        /*cardSuspender.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
-                try {
-                    peticionDesactivarCuenta(
-                        onSuccess = {message ->
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                            redirectToLoginActivity()
-                        },
-                        onError = { errorMessage ->
-                            Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                } catch (error: Exception) {
-                    Toast.makeText(activity, "Error al cerrar sesión $error", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }*/
+        busca_cliente()
 
         return view
     }
@@ -199,7 +182,7 @@ class UserFragment : Fragment() {
         queue.add(request)
     }
 
-    /*fun busca_cliente(){
+    fun busca_cliente(){
         GlobalScope.launch {
             try {
                 peticion_cliente()
@@ -209,19 +192,21 @@ class UserFragment : Fragment() {
     }
 
     suspend fun peticion_cliente(){
-        val url = config().detalles + "urlCuenta"
+        val url = config.urlCuenta + "v1/profile/"
         val queue = Volley.newRequestQueue(activity)
         val request = object : JsonObjectRequest(
             Method.GET,
             url,
             null,
             { response ->
-                cargar_formulario(response)
+                var nombre = response.getString("nombre")
+                var apellido = response.getString("apellido")
+                nombreCliente.setText("$nombre $apellido")
             },
             { error ->
                 Toast.makeText(
                     activity,
-                    "Error en el servidor: $error",
+                    "Error en el servidor: $error.networkResponse.statusCode",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -230,22 +215,13 @@ class UserFragment : Fragment() {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 // Obtener el token JWT de tu configuración y agregarlo a los encabezados
-                val token = config.token
-                if (token.isNotEmpty()) {
-                    headers["Authorization"] = "Bearer $token"
+                if (config.token.isNotEmpty()) {
+                    headers["Authorization"] = "Bearer "+config.token
                 }
                 return headers
             }
         }
         queue.add(request)
     }
-    fun cargar_formulario(registro: JSONObject){
-        var nombre=registro.getString("nombre")
-        if(nombre=="null"){
-            nombre = registro.getString("username")
-        }
-        nombreCliente.setText(nombre)
-        username.text = registro.getString("username")
 
-    }*/
 }

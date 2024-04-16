@@ -1,6 +1,7 @@
 package com.example.gadgetsfuture
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.SpannableString
@@ -13,6 +14,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -41,6 +43,9 @@ class pedido_fragment : Fragment() {
     lateinit var txtCodigoPostal: EditText
     lateinit var btnContinuarPago: Button
 
+
+    lateinit var btnBack: ImageButton
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -57,6 +62,7 @@ class pedido_fragment : Fragment() {
         sprMunicipio = view.findViewById(R.id.sprMunicipioPedido)
         txtCodigoPostal = view.findViewById(R.id.txtCodigoPostalPedido)
         btnContinuarPago = view.findViewById(R.id.btnContinuarPago)
+        btnBack = view.findViewById(R.id.btnBack)
 
         // Configuración del límite de longitud para el campo de teléfono
         txtTelefono.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
@@ -130,6 +136,13 @@ class pedido_fragment : Fragment() {
 
         btnContinuarPago.setOnClickListener {
             // Validar los campos y continuar con la lógica de tu aplicación
+        }
+
+
+        btnBack.setOnClickListener {
+            /*val intent = Intent(this@Registrarse, InicioSesion::class.java)
+            startActivity(intent)
+            finish()*/
         }
 
         return view

@@ -14,8 +14,10 @@ class config {
         //puerto SENA:
         //const val urlBase="http://10.192.88.39:8000"
         //puerto local:
-        const val urlBase="http://192.168.1.10:8000"
+        //const val urlBase="http://192.168.1.10:8000"
         //const val urlBase="http://192.168.105.200:8000"
+        const val urlBase="http://77.37.63.223:8080/"
+        //const val urlBase="http://192.168.137.2:8000"
 
         const val urlTienda="${urlBase}/tienda/api/"
         const val urlCuenta="${urlBase}/cuenta/api/"
