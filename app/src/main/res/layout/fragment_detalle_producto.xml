@@ -158,7 +158,7 @@
                         android:id="@+id/btnDetalleAggCarrito"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#115173"
+                        android:backgroundTint="@color/ColorPrincipal"
                         android:fallbackLineSpacing="true"
                         android:forceDarkAllowed="false"
                         android:hapticFeedbackEnabled="false"

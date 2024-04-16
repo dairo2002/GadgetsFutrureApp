@@ -72,10 +72,8 @@ class store_fragment : Fragment() {
 
 
         searchProduct.doAfterTextChanged {
-            if (searchProduct.text.toString() != "")
-                searchProductos()
-            else
-                llamarPeticionCategorias()
+            if (searchProduct.text.toString() != "") llamarSearchProductos()
+            else llamarPeticionCategorias()
         }
 
         llamarPeticionCategoria()
@@ -138,6 +136,53 @@ class store_fragment : Fragment() {
         }
     }
 
+
+    fun llamarPeticionCategorias() {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                listaProductos()
+            } catch (error: Exception) {
+                Toast.makeText(
+                    activity,
+                    "Error en el servidor, por favor conectate a internet",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    fun llamarSearchProductos() {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                peticionSearch()
+            } catch (error: Exception) {
+                Toast.makeText(
+                    activity,
+                    "Error en el servidor, por favor conectate a internet",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+
+
+    /** Función para el buscador */
+
+    suspend fun peticionSearch() {
+        var url = config.urlTienda + "v1/search_product/?txtBusqueda=" + searchProduct.text
+        var queue = Volley.newRequestQueue(activity)
+        var request = JsonArrayRequest(Request.Method.POST, url, null, { response ->
+            cargarLista(response)
+        }, { error ->
+            Toast.makeText(
+                activity, "Producto no encontrado en el inventario", Toast.LENGTH_LONG
+            ).show()
+        })
+        queue.add(request)
+    }
+
+
     /** Productos de una categoria */
 
     suspend fun categoriaDeProductos(idCategoria: Int) {
@@ -153,8 +198,7 @@ class store_fragment : Fragment() {
 
     }
 
-
-    /** Categoria */
+    /** Categorías */
     suspend fun listaCategoria() {
         var queue = Volley.newRequestQueue(activity)
         var url = config.urlTienda + "v1/lista_categorias/"
@@ -170,7 +214,6 @@ class store_fragment : Fragment() {
         queue.add(request)
     }
 
-
     fun cargarListaCategoria(listaCategoria: JSONArray) {
         recyclerCategoria.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -178,7 +221,6 @@ class store_fragment : Fragment() {
         adapter.onclick = { categoria ->
             try {
                 val idCategoria = categoria.getInt("id")
-
                 GlobalScope.launch {
                     try {
                         categoriaDeProductos(idCategoria)
@@ -220,8 +262,7 @@ class store_fragment : Fragment() {
         recyclerCategoria.adapter = adapter
     }
 
-
-    /** Productos */
+    /** Lista de productos */
 
     suspend fun listaProductos() {
         var url = config.urlBase + "/api/list_product/v1/"
@@ -234,62 +275,7 @@ class store_fragment : Fragment() {
         queue.add(request)
     }
 
-    //Función para el buscador
-    fun searchProductos() {
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                peticionSearch()
-            } catch (error: Exception) {
-                Toast.makeText(
-                    activity,
-                    "Error en el servidor, por favor conectate a internet",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    suspend fun peticionSearch() {
-        var url = config.urlTienda + "v1/search_product/?txtBusqueda=" + searchProduct.text
-        var queue = Volley.newRequestQueue(activity)
-        var request = JsonArrayRequest(Request.Method.POST, url, null, { response ->
-            cargarLista(response)
-        }, { error ->
-            Toast.makeText(
-                activity, "Producto no encontrado en el inventario", Toast.LENGTH_LONG
-            ).show()
-        })
-        queue.add(request)
-    }
-
-    fun llamarPeticionCategorias() {
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                peticionListaProductosC()
-            } catch (error: Exception) {
-                Toast.makeText(
-                    activity,
-                    "Error en el servidor, por favor conectate a internet",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-
-    suspend fun peticionListaProductosC() {
-        // http://192.168.153.200:8000/api/list_product/v1/
-        var url = config.urlBase + "api/list_product/v1/"
-        var queue = Volley.newRequestQueue(activity)
-        var request = JsonArrayRequest(Request.Method.GET, url, null, { response ->
-            cargarLista(response)
-        }, { error ->
-            Toast.makeText(activity, "Error en la solicitud", Toast.LENGTH_LONG).show()
-        })
-        queue.add(request)
-    }
-
-    //Función para cargar la lista (Se utiliza en las categorías y en el buscador
+    //Función para cargar la lista (Se utiliza en las categorías y en el buscador)
     fun cargarLista(listaProductos: JSONArray) {
         recyclerProducto.layoutManager = LinearLayoutManager(activity)
         var adapter = adapterHome(activity, listaProductos)

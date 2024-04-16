@@ -81,7 +81,7 @@ class UserFragment : Fragment() {
             }
         }
 
-        /*cardSuspender.setOnClickListener {
+        cardSuspender.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.apply {
                 setTitle("Confirmación")
@@ -107,7 +107,7 @@ class UserFragment : Fragment() {
             }
             val dialog = builder.create()
             dialog.show()
-        }*/
+        }
 
 
         /*cardSuspender.setOnClickListener {

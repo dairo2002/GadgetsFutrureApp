@@ -26,12 +26,12 @@ class InicioSesion : AppCompatActivity() {
     lateinit var passwordEditText: EditText
     lateinit var loginButton: Button
     lateinit var passwordError: TextView
-    lateinit var context:Context
+    lateinit var context: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityNavigator.applyPopAnimationsToPendingTransition(this)
         setContentView(R.layout.activity_inicio_sesion)
-        context=applicationContext
+        context = applicationContext
 
         MostrarContrasena()
         correoEditText = findViewById(R.id.txtCorreo)
@@ -56,8 +56,7 @@ class InicioSesion : AppCompatActivity() {
         val olvideContra = Intent(this, Recuperar_Contrasena::class.java)
         startActivity(olvideContra)
         this@InicioSesion.overridePendingTransition(
-            R.anim.animate_slide_left_enter,
-            R.anim.animate_slide_left_exit
+            R.anim.animate_slide_left_enter, R.anim.animate_slide_left_exit
         )
     }
 
@@ -66,65 +65,57 @@ class InicioSesion : AppCompatActivity() {
         startActivity(regis)
         finish()
         this@InicioSesion.overridePendingTransition(
-            R.anim.animate_slide_left_enter,
-            R.anim.animate_slide_left_exit
+            R.anim.animate_slide_left_enter, R.anim.animate_slide_left_exit
         )
-        
+
     }
 
     fun inicioSesion(view: View) {
         GlobalScope.launch {
-        if (login()) {
-            // Inicio de sesión exitoso
-            val intent = Intent(context, FrmPrincipal::class.java)
-            startActivity(intent)
-            finish()
-        } else {
-            passwordError.visibility = View.VISIBLE
-            passwordError.text = "Correo o contraseña incorrecta"
-        }
+            if (login()) {
+                // Inicio de sesión exitoso
+                val intent = Intent(context, FrmPrincipal::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                passwordError.visibility = View.VISIBLE
+                passwordError.text = "Correo o contraseña incorrecta"
+            }
         }
     }
 
     //private suspend fun login():Boolean{
-    private suspend fun login():Boolean{
-        var peticion:Boolean = false
-        var inicioExitoso:Boolean = false
+    private suspend fun login(): Boolean {
+        var peticion: Boolean = false
+        var inicioExitoso: Boolean = false
         val username = correoEditText.text.toString()
         val password = passwordEditText.text.toString()
         //var queue= Volley.newRequestQueue(context)
-        var queue= Volley.newRequestQueue(applicationContext)
-        var url=config.urlCuenta+"v1/login/"
+        var queue = Volley.newRequestQueue(applicationContext)
+        var url = config.urlCuenta + "v1/login/"
         //preparar los parametros
-        var parametros= JSONObject().apply {
+        var parametros = JSONObject().apply {
             put("correo_electronico", username)
             put("password", password)
         }
         //responde un: json = JsonRequest , String= StringRequest
-        val request= object : JsonObjectRequest (
-            Request.Method.POST,
-            url,
-            parametros,
-            {response->
-                val message = response.getString("message")
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                inicioExitoso = true
-                peticion = true
+        val request = object : JsonObjectRequest(Request.Method.POST, url, parametros, { response ->
+            val message = response.getString("message")
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            inicioExitoso = true
+            peticion = true
 
-                // Obtener el token de la respuesta y guardarlo
-                val token = response.getString("token")
-                config.token = token
-                //saveCredentials(username, password) // Guardar las credenciales
-            },
-            {error->
-                inicioExitoso = false
-                peticion = true
-            }
-        ){
-            override fun getHeaders(): MutableMap<String, String>{
+            val token = response.getString("token")
+            config.token = token
+            //saveCredentials(username, password) // Guardar las credenciales
+        }, { error ->
+            inicioExitoso = false
+            peticion = true
+        }) {
+            override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 // Agregar el token JWT si está disponible
-                if (config.token.isNotEmpty()){
+                if (config.token.isNotEmpty()) {
                     headers["Authorization"] = "Bearer ${config.token}"
                 }
                 return headers
@@ -132,7 +123,7 @@ class InicioSesion : AppCompatActivity() {
         }
         queue.add(request)
 
-        while (peticion == false){
+        while (peticion == false) {
             delay(500)
         }
         return inicioExitoso
@@ -155,15 +146,17 @@ class InicioSesion : AppCompatActivity() {
         return !username.isNullOrEmpty() && !password.isNullOrEmpty()
     }
 
-    private fun MostrarContrasena(){
+    private fun MostrarContrasena() {
         val checkBoxMostrarContrasena: CheckBox = findViewById(R.id.checkBoxMostrarContrasena)
         val password: EditText = findViewById(R.id.txtContra)
 
-        checkBoxMostrarContrasena.setOnCheckedChangeListener() {buttonView, isChecked ->
+        checkBoxMostrarContrasena.setOnCheckedChangeListener() { buttonView, isChecked ->
             if (isChecked) {
-                password.inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                password.inputType =
+                    android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             } else {
-                password.inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                password.inputType =
+                    android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
         }
     }

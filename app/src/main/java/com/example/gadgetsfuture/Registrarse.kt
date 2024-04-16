@@ -37,7 +37,7 @@ class Registrarse : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrarse)
-        context=applicationContext
+        context = applicationContext
 
         txtNombre = findViewById(R.id.txtNombre)
         txtApellidos = findViewById(R.id.txtApellidos)
@@ -57,13 +57,13 @@ class Registrarse : AppCompatActivity() {
             validarCampos()
         }
     }
-    fun  inicioS(view: View) {
+
+    fun inicioS(view: View) {
         val intent = Intent(this, InicioSesion::class.java)
         startActivity(intent)
         finish()
         this@Registrarse.overridePendingTransition(
-            R.anim.animate_slide_in_left,
-            R.anim.animate_slide_out_right
+            R.anim.animate_slide_in_left, R.anim.animate_slide_out_right
         )
     }
 
@@ -83,7 +83,7 @@ class Registrarse : AppCompatActivity() {
             isValid = false
         } else {
             nameError.visibility = View.VISIBLE
-            nameError.text =""
+            nameError.text = ""
         }
 
         if (apellidos.isEmpty()) {
@@ -101,7 +101,7 @@ class Registrarse : AppCompatActivity() {
             isValid = false
         } else {
             numError.visibility = View.VISIBLE
-            numError.text =""
+            numError.text = ""
         }
 
         if (email.isEmpty()) {
@@ -136,25 +136,26 @@ class Registrarse : AppCompatActivity() {
         }
 
         if (isValid) {
-            // Todos los campos son válidos, así que llamamos a la función para realizar el registro
             GlobalScope.launch(Dispatchers.Main) {
                 try {
                     peticionRegistrase()
-                    // Corregir que no lo deje entrar, asta activar la cuenta
-                    val intent = Intent(this@Registrarse, FrmPrincipal::class.java)
+                    val intent = Intent(this@Registrarse, InicioSesion::class.java)
                     startActivity(intent)
                     finish()
                 } catch (error: Exception) {
-                    // Manejo de errores
-                    Toast.makeText(this@Registrarse, "Error en el registro: $error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@Registrarse, "Error en el registro: $error", Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
     }
 
+
     //Funciones
-    suspend fun peticionRegistrase(){
-        var url=config.urlCuenta+"v1/signup/"
+    suspend fun peticionRegistrase() {
+        var url = config.urlCuenta + "v1/signup/"
+        var queue = Volley.newRequestQueue(applicationContext)
 
         //Obtener los valores de los campos del formulario
         var nombre = txtNombre.text.toString()
@@ -164,14 +165,11 @@ class Registrarse : AppCompatActivity() {
         var password = txtContras.text.toString()
         var confirmPwd = txtConfirmContra.text.toString()
 
-        if (password != confirmPwd){
+        if (password != confirmPwd) {
             Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-            // Salir de la funcion ya que las contrasenas no conciden
             return
         }
 
-        // Parámetros con la asignación al campo.
-        // Se crea un objeto JSONObject y luego aplica una serie de operaciones a ese objeto dentro del bloque de código del apply
         var parametros = JSONObject().apply {
             put("nombre", nombre)
             put("apellido", apellido)
@@ -179,24 +177,15 @@ class Registrarse : AppCompatActivity() {
             put("telefono", telefono)
             put("password", password)
         }
-
-        val request = JsonObjectRequest(
-            Request.Method.POST,
-            url,
-            parametros,
-            {response ->
-                val message = response.getString("message")
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            },
-            {error ->
-                Toast.makeText(this, "Error en la solicitud: $error", Toast.LENGTH_SHORT).show()
-            }
-        )
-        var queue= Volley.newRequestQueue(context)
+        val request = JsonObjectRequest(Request.Method.POST, url, parametros, { response ->
+            val message = response.getString("message")
+            Toast.makeText(this@Registrarse, message, Toast.LENGTH_SHORT).show()
+        }, { error ->
+            Toast.makeText(this@Registrarse, "Error en la solicitud: $error", Toast.LENGTH_SHORT).show()
+        })
         queue.add(request)
 
     }
-
 
 
 }

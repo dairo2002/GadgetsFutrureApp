@@ -18,6 +18,7 @@ import com.example.gadgetsfuture.config.config
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONObject
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -52,9 +53,11 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
         return MyHolder(itemView)
     }
 
+    var onclick:((JSONObject)->Unit)?=null
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         val carrito = listaCarrito.getJSONObject(position)
 
+        var idCarrito = carrito.getInt("id")
         var nombre = carrito.getString("producto")
         var imagen = config.urlBase + carrito.getString("imagen")
         var cantidad = carrito.getInt("cantidad")
@@ -85,9 +88,7 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
         }
 
         holder.btnEliminarCarrito.setOnClickListener {
-            val carrito = listaCarrito.getJSONObject(position)
-            val idCarrito = carrito.getInt("id")
-            eliminarItemDelCarrito(idCarrito)
+            onclick?.invoke(carrito)
         }
     }
 
@@ -116,6 +117,11 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
             }
         }
     }
+
+    interface OnCartItemDeleteListener {
+        fun onCartItemDelete(productId: Int)
+    }
+
 
     override fun getItemCount(): Int {
         return listaCarrito.length()
