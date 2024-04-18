@@ -18,6 +18,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.gadgetsfuture.adapter.adapterCategoria
 import com.example.gadgetsfuture.config.config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,18 +27,11 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Cart_fragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 
-class Cart_fragment : Fragment() {
+class Cart_fragment : Fragment(), adapterCarrito.TotalCalculadoListener {
 
     lateinit var ID: TextView
     lateinit var btnMas: Button
@@ -54,21 +48,12 @@ class Cart_fragment : Fragment() {
         arguments?.let {}
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cart, container, false)
         recyclerCarrito = view.findViewById(R.id.RVCart)
         lblTotal = view.findViewById(R.id.lblTotalCarrito)
-
-
-        /*txtCantidad = view.findViewById(R.id.txtCantidadCart)
-        btnMas = view.findViewById(R.id.btnMenosCantCart)
-        btnMas = view.findViewById(R.id.btnMasCantCart)*/
-
-
-
         btnActualizar = view.findViewById(R.id.btnActualizarCart)
         btnRealizarPedido = view.findViewById(R.id.btnRealizarPedido)
 
@@ -79,25 +64,33 @@ class Cart_fragment : Fragment() {
             transaction.addToBackStack(null)
             transaction.commit()
         }
-
-
         peticionMostarCarrito()
 
+        // Inicializar la RecyclerView
+        recyclerCarrito = view.findViewById(R.id.RVCart)
+        recyclerCarrito.layoutManager = LinearLayoutManager(activity)
 
+        // Inicializar el TextView para el total
+        lblTotal = view.findViewById(R.id.lblTotalCarrito)
 
-        /*btnActualizar.setOnClickListener {
-            GlobalScope.launch {
-                try {
-                    actualizarCarrito()
-                } catch (error: Exception)    {
-                    Toast.makeText(activity, "Error en la petición: {$error}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }*/
+        // Crear un adaptador de carrito con una lista vacía
+        val listaCarrito = JSONArray()
+        val adapter = adapterCarrito(requireContext(), listaCarrito)
 
+        // Establecer este fragmento como listener para el total calculado en el adaptador
+        adapter.setTotalListener(this)
 
+        // Asignar el adaptador a la RecyclerView
+        recyclerCarrito.adapter = adapter
 
         return view
+    }
+
+    override fun onTotalCalculado(total: Double) {
+        // Aquí recibes el total calculado del adaptador
+        // Haz lo que necesites con el total en este fragmento
+        lblTotal.text = total.toString()
+
     }
 
     companion object {
@@ -154,20 +147,48 @@ class Cart_fragment : Fragment() {
 
     }
 
+    fun cargarListaCarrito(listaCarrito: JSONArray) {
+        recyclerCarrito.layoutManager = LinearLayoutManager(activity)
+        var adapter = adapterCarrito(activity, listaCarrito)
+        adapter.onclickEliminar = { carrito ->
+            var idCart = carrito.getInt("id_producto")
+
+            GlobalScope.launch {
+                try {
+                    eliminarCarrito(idCart)
+                } catch (error: Exception) {
+                    Toast.makeText(
+                        activity,
+                        "Error en la petición: {$error}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+        recyclerCarrito.adapter = adapter
+
+    }
 
     /** Corregir */
     suspend fun eliminarCarrito(id: Int) {
-        var url = config.urlCarrito + "v1/eliminar_carrito/"
-        var queue = Volley.newRequestQueue(requireContext())/*val parametro = JSONObject().apply {
-            put("id", id)
-        }*/
+        var url = config.urlCarrito + "v1/eliminar_carrito/$id/"
+        var queue = Volley.newRequestQueue(activity)
 
-        var request = object : JsonObjectRequest(Request.Method.DELETE, url, null, { response ->
-            val message = response.getString("message")
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-        }, { error ->
-            Toast.makeText(requireContext(), "Error: $error", Toast.LENGTH_LONG).show()
-        }) {
+        var request = object : JsonObjectRequest(
+            Method.DELETE,
+            url,
+            null,
+            { response ->
+                val message = response.getString("message")
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                peticionMostarCarrito()
+            },
+            { error ->
+                var mensajeError = JSONObject(String(error.networkResponse.data))
+                Toast.makeText(activity, "Error al eliminar: ${mensajeError}", Toast.LENGTH_LONG)
+                    .show()
+            }
+        ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
                 if (config.token.isNotEmpty()) {
@@ -177,6 +198,7 @@ class Cart_fragment : Fragment() {
             }
         }
         queue.add(request)
+
     }
 
 
@@ -211,85 +233,7 @@ class Cart_fragment : Fragment() {
     }
 
 
-    fun cargarListaCarrito(listaCarrito: JSONArray) {
-        recyclerCarrito.layoutManager = LinearLayoutManager(activity)
-        var adapter = adapterCarrito(requireContext(), listaCarrito)
-        adapter.onclick = { carrito ->
-            var idCart = carrito.getInt("id")
-            var total = 0.0
-
-            val cantidad = carrito.getInt("cantidad")
-            val precio = carrito.getDouble("precio")
-            total += cantidad * precio
-
-            // Muestra el total en el TextView
-            lblTotal.text = total.toString()
-            adapter.notifyDataSetChanged()
-
-
-
-            GlobalScope.launch {
-                try {
-                    //eliminarCarrito(idCart)
-                } catch (error: Exception) {
-                    Toast.makeText(
-                        requireContext(), "Error en la petición: {$error}", Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-        recyclerCarrito.adapter = adapter
-    }
-
-
     suspend fun realizarPedido() {
 
     }
-
-
 }
-
-/*fun cargarListaCarrito(listaCarrito: JSONArray){
-    recyclerCarrito.layoutManager= LinearLayoutManager(activity)
-    var adapter= adapterCarrito(activity, listaCarrito)
-    adapter.onclick={carrito ->
-        idCarrito=carrito.getInt("id")
-        cantidad=carrito.getInt("cantidad")
-
-        /*val bundle=Bundle().apply {
-            putInt("idCarrito", idCarrito)
-        }*/
-
-        /*GlobalScope.launch {
-                try {
-                    actualizarCarrito(idCarrito, cantidad)
-                } catch (error: Exception)    {
-                    Toast.makeText(activity, "Error en la petición: {$error}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        */
-
-        /*GlobalScope.launch {
-         try {
-             eliminarCarrito(idCarrito)
-             //val intent = Intent(activity, Cart_fragment::class.java)
-             //startActivity(intent)
-         } catch (error: Exception)    {
-             Toast.makeText(activity, "Error en la petición: {$error}", Toast.LENGTH_SHORT).show()
-         }
-     }*/
-
-    }
-    recyclerCarrito.adapter=adapter
-}*/
-
-/*adapter.onclick= {
-       val bundle=Bundle()
-       bundle.putInt("id_carrito",it.getInt("id"))
-       val transaction=requireFragmentManager().beginTransaction()
-       var fragmento=detalle_producto()
-       fragmento.arguments=bundle
-       transaction.replace(R.id.container, fragmento).commit()
-       transaction.addToBackStack(null)
-   }*/
-

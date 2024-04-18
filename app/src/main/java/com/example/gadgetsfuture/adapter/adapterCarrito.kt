@@ -47,6 +47,15 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
         }
     }
 
+    interface TotalCalculadoListener {
+        fun onTotalCalculado(total: Double)
+    }
+
+    private var totalCalculadoListener: TotalCalculadoListener? = null
+    fun setTotalListener(listener: TotalCalculadoListener) {
+        totalCalculadoListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_carro, parent, false)
@@ -54,15 +63,23 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
     }
 
     var onclick:((JSONObject)->Unit)?=null
+    var onclickSuma:((JSONObject)->Unit)?=null
+    var onclickResta:((JSONObject)->Unit)?=null
+    var onclickEliminar:((JSONObject)->Unit)?=null
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         val carrito = listaCarrito.getJSONObject(position)
 
         var idCarrito = carrito.getInt("id")
         var nombre = carrito.getString("producto")
-        var imagen = config.urlBase + carrito.getString("imagen")
         var cantidad = carrito.getInt("cantidad")
         val precio = carrito.getDouble("precio")
+        var imagen = config.urlBase + carrito.getString("imagen")
+
         var subtotal = cantidad * precio
+        var total = 0.0
+        total += subtotal
+        totalCalculadoListener?.onTotalCalculado(total)
+
 
         if (nombre.length >= 40) {
             nombre = nombre.substring(0, 39) + "..."
@@ -88,17 +105,12 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
         }
 
         holder.btnEliminarCarrito.setOnClickListener {
-            onclick?.invoke(carrito)
+            //val carrito = listaCarrito.getJSONObject(position)
+            //val idCarrito = carrito.getInt("id")
+            onclickEliminar?.invoke(carrito)
+            eliminarItemDelCarrito(idCarrito)
         }
     }
-
-    /*fun total(){
-        val carrito = listaCarrito.getJSONObject(position)
-        var cantidad = carrito.getInt("cantidad")
-        val precio = carrito.getDouble("precio")
-        var subtotal = cantidad * precio
-
-    }*/
 
     private fun sumarCantidad(textView: TextView) {
         var cantidad = textView.text.toString().toIntOrNull() ?: 0

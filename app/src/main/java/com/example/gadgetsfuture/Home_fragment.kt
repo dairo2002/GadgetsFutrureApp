@@ -172,9 +172,6 @@ class Home_fragment : Fragment() {
             GlobalScope.launch {
                 try {
                     agregarCarrito(productoId)
-                    // Corregir
-                    //val intent = Intent(activity, Cart_fragment::class.java)
-                    //startActivity(intent)
                 } catch (error: Exception)    {
                     Toast.makeText(activity, "Error en la petición: {$error}", Toast.LENGTH_SHORT).show()
                 }
