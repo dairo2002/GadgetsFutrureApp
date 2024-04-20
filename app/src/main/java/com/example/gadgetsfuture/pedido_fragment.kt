@@ -2,6 +2,7 @@ package com.example.gadgetsfuture
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.SpannableString
@@ -21,6 +22,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.gadgetsfuture.config.config
 import com.example.gadgetsfuture.model.Departamentos
@@ -135,12 +137,19 @@ class pedido_fragment : Fragment() {
          */
 
         btnContinuarPago.setOnClickListener {
-            // Validar los campos y continuar con la lógica de tu aplicación
+            GlobalScope.launch {
+                try {
+                    realizarPedido()
+                } catch (error: Exception) {
+                    Toast.makeText(context, "Error en el pedido: $error", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
 
+
         btnBack.setOnClickListener {
-            /*val intent = Intent(this@Registrarse, InicioSesion::class.java)
+            /*val intent = Intent(this@pedido_fragment, Cart_fragment::class.java)
             startActivity(intent)
             finish()*/
         }
@@ -149,7 +158,7 @@ class pedido_fragment : Fragment() {
     }
 
     // Función para cargar los departamentos en el spinner
-    private fun cargarDepartamentos(context: Context, spinner: Spinner) {
+    fun cargarDepartamentos(context: Context, spinner: Spinner) {
         GlobalScope.launch {
             try {
                 // Realizar la solicitud para obtener la lista de departamentos
@@ -170,7 +179,7 @@ class pedido_fragment : Fragment() {
     }
 
     // Función para cargar los municipios en el spinner según el departamento seleccionado
-    private fun cargarMunicipiosPorDepartamento(context: Context, codigoDepartamento: String, spinner: Spinner) {
+    fun cargarMunicipiosPorDepartamento(context: Context, codigoDepartamento: String, spinner: Spinner) {
         GlobalScope.launch {
             try {
                 // Realizar la solicitud para obtener la lista de municipios del departamento seleccionado
@@ -191,7 +200,7 @@ class pedido_fragment : Fragment() {
     }
 
     // Función para obtener la lista de departamentos
-    private suspend fun ListaDepartamento(context: Context, callback: (List<Departamentos>) -> Unit) {
+    suspend fun ListaDepartamento(context: Context, callback: (List<Departamentos>) -> Unit) {
         val url = config.urlPedido + "v1/departamento/"
         val queue = Volley.newRequestQueue(context)
         val request = JsonArrayRequest(Request.Method.GET, url, null, { response ->
@@ -215,7 +224,7 @@ class pedido_fragment : Fragment() {
     }
 
     // Función para obtener la lista de municipios según el departamento seleccionado
-    private suspend fun obtenerMunicipiosPorDepartamento(
+     suspend fun obtenerMunicipiosPorDepartamento(
         context: Context, codigoDepartamento: String, callback: (List<Municipios>) -> Unit
     ) {
         val url = config.urlPedido + "v1/municipio/?codigo_departamento=$codigoDepartamento"
@@ -241,5 +250,48 @@ class pedido_fragment : Fragment() {
         })
         queue.add(request)
     }
+
+     suspend fun realizarPedido() {
+         val url = config.urlPedido + "v1/realizar_pedido/"
+         val queue = Volley.newRequestQueue(context)
+         val parametro = JSONObject()
+
+         parametro.put("nombre", txtNombre.text)
+         parametro.put("apellido", txtApellido.text)
+         parametro.put("correo_electronico", txtCorreo.text)
+         parametro.put("telefono", txtTelefono.text)
+         parametro.put("direccion", txtDireccion.text)
+         parametro.put("direccion_local", txtDireccionLocal.text)
+         parametro.put("departamento", sprDepartamento.selectedItem?.toString() ?: "")
+         parametro.put("municipio", sprMunicipio.selectedItem?.toString() ?: "")
+         parametro.put("codigo_postal", txtCodigoPostal.text)
+
+         val request = object : JsonObjectRequest(
+             Request.Method.POST,
+             url,
+             parametro,
+             { response ->
+                 // Maneja la respuesta de la API aquí
+                 val pedidoId = response.getInt("pedido_id")
+                 var url = config.urlBase + "/pedido/pago/$pedidoId/"
+                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                 startActivity(intent)
+             },
+             { error ->
+                 Toast.makeText(
+                     context, "Error en la solicitud: $error", Toast.LENGTH_SHORT
+                 ).show()
+             }) {
+             override fun getHeaders(): MutableMap<String, String> {
+                 val headers = HashMap<String, String>()
+                 if (config.token.isNotEmpty()) {
+                     headers["Authorization"] = "Bearer ${config.token}"
+                 }
+                 return headers
+             }
+         }
+
+         queue.add(request)
+     }
 
 }

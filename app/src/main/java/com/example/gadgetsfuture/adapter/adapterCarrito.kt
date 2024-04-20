@@ -1,22 +1,15 @@
 import android.widget.Button
-
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.gadgetsfuture.Cart_fragment
 import com.example.gadgetsfuture.R
 import com.example.gadgetsfuture.config.config
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.NumberFormat
@@ -25,7 +18,15 @@ import java.util.Locale
 class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
     RecyclerView.Adapter<adapterCarrito.MyHolder>() {
 
+    interface TotalListener {
+        fun onTotalUpdated(total: Double)
+    }
+
+    var totalListener: TotalListener? = null
+    var totalValue: Double = 0.0
+
     inner class MyHolder(Item: View) : RecyclerView.ViewHolder(Item) {
+
         lateinit var lblNombre: TextView
         lateinit var imgProducto: ImageView
         lateinit var txtCantidad: TextView
@@ -47,14 +48,7 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
         }
     }
 
-    interface TotalCalculadoListener {
-        fun onTotalCalculado(total: Double)
-    }
 
-    private var totalCalculadoListener: TotalCalculadoListener? = null
-    fun setTotalListener(listener: TotalCalculadoListener) {
-        totalCalculadoListener = listener
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         val itemView =
@@ -66,23 +60,18 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
     var onclickSuma:((JSONObject)->Unit)?=null
     var onclickResta:((JSONObject)->Unit)?=null
     var onclickEliminar:((JSONObject)->Unit)?=null
+
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         val carrito = listaCarrito.getJSONObject(position)
-
         var idCarrito = carrito.getInt("id")
         var nombre = carrito.getString("producto")
         var cantidad = carrito.getInt("cantidad")
         val precio = carrito.getDouble("precio")
         var imagen = config.urlBase + carrito.getString("imagen")
-
         var subtotal = cantidad * precio
-        var total = 0.0
-        total += subtotal
-        totalCalculadoListener?.onTotalCalculado(total)
 
-
-        if (nombre.length >= 40) {
-            nombre = nombre.substring(0, 39) + "..."
+        if (nombre.length >= 30) {
+            nombre = nombre.substring(0, 29) + "..."
         }
 
         val formato = NumberFormat.getCurrencyInstance(Locale("es", "CO"))
@@ -98,18 +87,32 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
 
         holder.btnSumar.setOnClickListener {
             sumarCantidad(holder.txtCantidad)
+            totalValue = calcularTotal()
+            totalListener?.onTotalUpdated(totalValue)
         }
 
         holder.btnRestar.setOnClickListener {
             restarCantidad(holder.txtCantidad)
+            totalValue = calcularTotal()
+            totalListener?.onTotalUpdated(totalValue)
         }
 
         holder.btnEliminarCarrito.setOnClickListener {
-            //val carrito = listaCarrito.getJSONObject(position)
-            //val idCarrito = carrito.getInt("id")
             onclickEliminar?.invoke(carrito)
-            eliminarItemDelCarrito(idCarrito)
+            totalValue = calcularTotal()
+            totalListener?.onTotalUpdated(totalValue)
         }
+    }
+
+    private fun calcularTotal(): Double {
+        var total = 0.0
+        for (i in 0 until listaCarrito.length()) {
+            val carrito = listaCarrito.getJSONObject(i)
+            val cantidad = carrito.getInt("cantidad")
+            val precio = carrito.getDouble("precio")
+            total += cantidad * precio
+        }
+        return total
     }
 
     private fun sumarCantidad(textView: TextView) {
@@ -128,22 +131,9 @@ class adapterCarrito(var context: Context?, var listaCarrito: JSONArray) :
         }
     }
 
-    private fun eliminarItemDelCarrito(id: Int) {
-        GlobalScope.launch {
-            try {
-                (context as? Cart_fragment)?.eliminarCarrito(id)
-            } catch (error: Exception) {
-                Toast.makeText(context, "Error en la petición: $error", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    interface OnCartItemDeleteListener {
-        fun onCartItemDelete(productId: Int)
-    }
-
 
     override fun getItemCount(): Int {
         return listaCarrito.length()
     }
+
 }
