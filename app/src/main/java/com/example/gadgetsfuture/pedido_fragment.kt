@@ -1,13 +1,11 @@
 package com.example.gadgetsfuture
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +23,6 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.gadgetsfuture.config.config
-import com.example.gadgetsfuture.model.Departamentos
-import com.example.gadgetsfuture.model.Municipios
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -48,6 +44,8 @@ class pedido_fragment : Fragment() {
 
     lateinit var btnBack: ImageButton
 
+    private val departamentosMap = HashMap<String, String>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -66,7 +64,7 @@ class pedido_fragment : Fragment() {
         btnContinuarPago = view.findViewById(R.id.btnContinuarPago)
         btnBack = view.findViewById(R.id.btnBack)
 
-        // Configuración del límite de longitud para el campo de teléfono
+
         txtTelefono.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(10))
 
         // Configuración del texto con subrayado para el texto de dirección local
@@ -77,11 +75,12 @@ class pedido_fragment : Fragment() {
 
         // Manejo del evento de clic en el texto de dirección local para mostrar/ocultar el campo
         lblDireccionLocal.setOnClickListener {
-            txtDireccionLocal.visibility = if (txtDireccionLocal.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            txtDireccionLocal.visibility =
+                if (txtDireccionLocal.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
 
         // Cargar los departamentos al spinner al iniciar el fragmento
-        cargarDepartamentos(requireActivity(), sprDepartamento)
+        //cargarDepartamentos(requireActivity(), sprDepartamento)
 
         // Configurar el listener para el Spinner de departamentos
         /*sprDepartamento.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -136,6 +135,16 @@ class pedido_fragment : Fragment() {
         }
          */
 
+        GlobalScope.launch {
+            try {
+                obtenerDepartamentos()
+            } catch (error: Exception) {
+                Toast.makeText(context, "Error en la solicitud: $error", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+
         btnContinuarPago.setOnClickListener {
             GlobalScope.launch {
                 try {
@@ -147,110 +156,110 @@ class pedido_fragment : Fragment() {
         }
 
 
-
-        btnBack.setOnClickListener {
-            /*val intent = Intent(this@pedido_fragment, Cart_fragment::class.java)
+        /*btnBack.setOnClickListener {
+            val intent = Intent(this@pedido_fragment, Cart_fragment::class.java)
             startActivity(intent)
-            finish()*/
-        }
+            finish()
+        }*/
+
+
 
         return view
     }
 
-    // Función para cargar los departamentos en el spinner
-    fun cargarDepartamentos(context: Context, spinner: Spinner) {
-        GlobalScope.launch {
-            try {
-                // Realizar la solicitud para obtener la lista de departamentos
-                ListaDepartamento(context) { departamentos ->
-                    // Crear un adaptador con la lista de departamentos y establecerlo en el Spinner
-                    val adapterDepartamentos = ArrayAdapter(
-                        context,
-                        android.R.layout.simple_spinner_item,
-                        departamentos.map { it.nombre }
-                    )
-                    adapterDepartamentos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinner.adapter = adapterDepartamentos
-                }
-            } catch (error: Exception) {
-                Toast.makeText(context, "Error al cargar los departamentos", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    // Función para cargar los municipios en el spinner según el departamento seleccionado
-    fun cargarMunicipiosPorDepartamento(context: Context, codigoDepartamento: String, spinner: Spinner) {
-        GlobalScope.launch {
-            try {
-                // Realizar la solicitud para obtener la lista de municipios del departamento seleccionado
-                obtenerMunicipiosPorDepartamento(context, codigoDepartamento) { municipios ->
-                    // Crear un adaptador con la lista de municipios y establecerlo en el Spinner
-                    val adapterMunicipios = ArrayAdapter(
-                        context,
-                        android.R.layout.simple_spinner_item,
-                        municipios.map { it.nombre }
-                    )
-                    adapterMunicipios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinner.adapter = adapterMunicipios
-                }
-            } catch (error: Exception) {
-                Toast.makeText(context, "Error al cargar los municipios", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    // Función para obtener la lista de departamentos
-    suspend fun ListaDepartamento(context: Context, callback: (List<Departamentos>) -> Unit) {
+    suspend fun obtenerDepartamentos() {
         val url = config.urlPedido + "v1/departamento/"
+        //val departamentos = ArrayList<String>()
+
         val queue = Volley.newRequestQueue(context)
-        val request = JsonArrayRequest(Request.Method.GET, url, null, { response ->
-            try {
-                val departamentos = mutableListOf<Departamentos>()
+        val request = JsonArrayRequest(
+            Request.Method.GET,
+            url,
+            null,
+            { response ->
                 for (i in 0 until response.length()) {
                     val departamento = response.getJSONObject(i)
-                    val depa = Departamentos(
-                        departamento.getString("nombre"), departamento.getString("codigo")
-                    )
-                    departamentos.add(depa)
+                    val nombreD = departamento.getString("nombre")
+                    val codigoD = departamento.getString("codigo")
+                    //departamentos.add(nombreD)
+                    departamentosMap[nombreD] = codigoD
                 }
-                callback(departamentos)
-            } catch (e: Exception) {
-                Log.e("ListaDepartamentos", "Error al procesar la respuesta JSON: $e")
-            }
-        }, { error ->
-            Toast.makeText(context, "Error en la solicitud: $error", Toast.LENGTH_LONG).show()
-        })
+                cargarDepartamentosSpinner(departamentosMap.keys.toList())
+            },
+            { error ->
+                Toast.makeText(context, "Error en la solicitud: $error", Toast.LENGTH_LONG).show()
+            })
         queue.add(request)
     }
 
-    // Función para obtener la lista de municipios según el departamento seleccionado
-     suspend fun obtenerMunicipiosPorDepartamento(
-        context: Context, codigoDepartamento: String, callback: (List<Municipios>) -> Unit
-    ) {
-        val url = config.urlPedido + "v1/municipio/?codigo_departamento=$codigoDepartamento"
+    fun cargarDepartamentosSpinner(departamentos: List<String>) {
+        val adapterDepartamentos = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, departamentos)
+        adapterDepartamentos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        sprDepartamento.adapter = adapterDepartamentos
+
+        sprDepartamento.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val departamentoSeleccionado = parent?.getItemAtPosition(position) as String
+                val codigoDepartamento = departamentosMap[departamentoSeleccionado]
+                if (codigoDepartamento != null) {
+                    GlobalScope.launch {
+                        try {
+                            obtenerMunicipiosPorDepartamento(codigoDepartamento)
+                        } catch (error: Exception) {
+                            // Manejar el caso cuando no se encuentra el código del departamento
+                            Toast.makeText(
+                                context,
+                                "Error",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                } else {
+                    // Manejar el caso cuando no se encuentra el código del departamento
+                    Toast.makeText(
+                        context,
+                        "Código de departamento no encontrado",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Método requerido pero no se necesita implementar en este caso
+            }
+        }
+    }
+
+    suspend fun obtenerMunicipiosPorDepartamento(codDepartamento: String) {
+        val url = config.urlPedido + "v2/municipio/$codDepartamento"
+        val municipios = ArrayList<String>()
         val queue = Volley.newRequestQueue(context)
-        val request = JsonArrayRequest(Request.Method.GET, url, null, { response ->
-            try {
-                val municipios = mutableListOf<Municipios>()
+        val request = JsonArrayRequest(
+            Request.Method.GET,
+            url,
+            null,
+            { response ->
                 for (i in 0 until response.length()) {
                     val municipio = response.getJSONObject(i)
-                    val muni = Municipios(
-                        municipio.getString("nombre"),
-                        municipio.getString("codigo"),
-                        municipio.getString("codigo_departamento"),
-                    )
-                    municipios.add(muni)
+                    val nombreM = municipio.getString("nombre")
+                    municipios.add(nombreM)
                 }
-                callback(municipios)
-            } catch (e: Exception) {
-                Log.e("obtenerMunicipios", "Error al procesar la respuesta JSON: $e")
-            }
-        }, { error ->
-            Toast.makeText(context, "Error en la solicitud: $error", Toast.LENGTH_LONG).show()
-        })
+                cargarMunicipiosSpinner(municipios)
+            },
+            { error ->
+                Toast.makeText(context, "Error en la solicitud: $error", Toast.LENGTH_LONG).show()
+            })
         queue.add(request)
     }
 
+    private fun cargarMunicipiosSpinner(municipios: List<String>) {
+        val adapterMunicipios = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, municipios)
+        adapterMunicipios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        sprMunicipio.adapter = adapterMunicipios
+    }
+
+    
      suspend fun realizarPedido() {
          val url = config.urlPedido + "v1/realizar_pedido/"
          val queue = Volley.newRequestQueue(context)
@@ -271,7 +280,6 @@ class pedido_fragment : Fragment() {
              url,
              parametro,
              { response ->
-                 // Maneja la respuesta de la API aquí
                  val pedidoId = response.getInt("pedido_id")
                  var url = config.urlBase + "/pedido/pago/$pedidoId/"
                  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -293,5 +301,4 @@ class pedido_fragment : Fragment() {
 
          queue.add(request)
      }
-
 }

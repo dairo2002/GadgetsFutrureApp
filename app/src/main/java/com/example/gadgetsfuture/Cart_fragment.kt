@@ -1,16 +1,11 @@
 package com.example.gadgetsfuture;
 
 import adapterCarrito
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -18,21 +13,16 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.gadgetsfuture.adapter.adapterCategoria
 import com.example.gadgetsfuture.config.config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.text.NumberFormat
-import java.util.Locale
+
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
