@@ -153,7 +153,6 @@ class Home_fragment : Fragment() {
             val productoId = producto.getInt("id")
             val bundle=Bundle().apply {
                 putInt("id_productoH", productoId)
-
             }
             val transaction=requireFragmentManager().beginTransaction()
             var fragmento=detalle_producto()

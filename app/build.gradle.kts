@@ -47,6 +47,9 @@ dependencies {
     //Librerias carrusel
     //implementation ("com.github.denzcoskun:ImageSlideshow:0.1.0")
     implementation ("com.github.denzcoskun:ImageSlideshow:0.1.0")
+
+    implementation ("com.squareup.okhttp3:okhttp:4.9.2")
+
     //Librerias conexion de API
     implementation("com.android.volley:volley:1.2.1")
     //librería para trabajo en segundo plano

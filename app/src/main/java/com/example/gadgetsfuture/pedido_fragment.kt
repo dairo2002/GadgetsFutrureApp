@@ -253,13 +253,13 @@ class pedido_fragment : Fragment() {
         queue.add(request)
     }
 
-    private fun cargarMunicipiosSpinner(municipios: List<String>) {
+    fun cargarMunicipiosSpinner(municipios: List<String>) {
         val adapterMunicipios = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, municipios)
         adapterMunicipios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sprMunicipio.adapter = adapterMunicipios
     }
 
-    
+
      suspend fun realizarPedido() {
          val url = config.urlPedido + "v1/realizar_pedido/"
          val queue = Volley.newRequestQueue(context)
@@ -281,9 +281,20 @@ class pedido_fragment : Fragment() {
              parametro,
              { response ->
                  val pedidoId = response.getInt("pedido_id")
-                 var url = config.urlBase + "/pedido/pago/$pedidoId/"
+                 // pasar el id al cambio de fragmento
+                 /*var url = config.urlBase + "/pedido/pago/$pedidoId/"
                  val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                 startActivity(intent)
+                 startActivity(intent)*/
+
+                 val bundle=Bundle().apply {
+                     putInt("pedido_id", pedidoId)
+                 }
+                 val transaction=requireFragmentManager().beginTransaction()
+                 var fragmento=pago_Fragment()
+                 fragmento.arguments=bundle
+                 transaction.replace(R.id.container, fragmento)
+                 transaction.addToBackStack(null)
+                 transaction.commit()
              },
              { error ->
                  Toast.makeText(
@@ -298,7 +309,7 @@ class pedido_fragment : Fragment() {
                  return headers
              }
          }
-
          queue.add(request)
      }
+
 }

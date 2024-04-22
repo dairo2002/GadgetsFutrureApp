@@ -37,7 +37,6 @@ private const val ARG_PARAM2 = "param2"
  */
 class detalle_producto : Fragment() {
 
-    private lateinit var view: View
     private var id_producto: Int = 0
 
     lateinit var lblNombre: TextView

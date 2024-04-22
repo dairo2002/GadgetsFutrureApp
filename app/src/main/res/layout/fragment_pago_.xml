@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pago_Fragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subir comprobante"
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="15dp">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="left|start"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:text="Número de cuenta"
+                android:gravity="left"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18dp"
+                android:text="312-222-0001"
+                android:gravity="right"/>
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/imgComprobante"
+            android:layout_width="320dp"
+            android:layout_height="330dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"/>
+
+        <!-- Botón para seleccionar una imagen -->
+        <Button
+            android:id="@+id/btnSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Seleccionar Imagen"
+            android:layout_gravity="center"/>
+
+        <!-- Grupo de radio buttons para opciones -->
+        <RadioGroup
+            android:id="@+id/rdGrupo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnSelectImage"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
+
+            <!-- Radio button 1 -->
+            <RadioButton
+                android:id="@+id/rdOpcionEfectivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Efectivo" />
+
+            <!-- Radio button 2 -->
+            <RadioButton
+                android:id="@+id/rdOpcionNequi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nequi" />
+
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnPagar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Pagar"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+</FrameLayout>
